@@ -11,7 +11,7 @@ export class Login extends Component {
   }
 };
 
-const Button = styled.div`
+const Button = styled.a`
     position: absolute;
     top: 50%;
     left: 50%;
@@ -20,5 +20,11 @@ const Button = styled.div`
     padding: 1em 2em;
     font-size: 2.5em;
     color: ${Colors.white};
-    border-radius: 35px;    
+    border-radius: 35px;
+    transition: all .5s;
+
+    &:hover {
+      background-color: ${Colors.darkGreen};
+      color: white;
+    }
 `;
