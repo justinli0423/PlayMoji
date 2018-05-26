@@ -22,13 +22,12 @@ export class Field extends Component {
 const Input = styled.input`
     font-size: 2em;
     margin: .5em auto;
-    /* width: 15em; */
     color: ${Colors.black};
     background-color: ${Colors.white};
-    border-radius: 5px;
     transition: all .5s;
     padding: 0.5em;
-    border: 2px solid ${Colors.green};
+    border: none;
+    border-bottom: 2px solid ${Colors.black};
 
 
     &:focus {

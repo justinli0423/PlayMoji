@@ -57,7 +57,7 @@ class App extends Component {
     return (
       <Container>
         <WrapperFlex>
-          <Title>Spot.me</Title>
+          <Title>playmoji</Title>
           {(!this.state.access_token) && <Login label = {"Sign in"}></Login>}
           {!!this.state.access_token && <Form token={this.state.access_token} userid={this.state.id}></Form>} 
         </WrapperFlex>
@@ -75,7 +75,7 @@ class App extends Component {
 
 const Title = styled.h1`
   text-align: center;
-  font-size: 4em;
+  font-size: 6em;
 `;
 
 const WrapperFlex = styled.div`
@@ -91,16 +91,24 @@ const WrapperFlex = styled.div`
 const Welcome = styled.div`
   display: block;
   position: absolute;
+  cursor: default;
   padding: 0 2em;
   top: 0;
   right: 0;
-  margin: 0 auto;
+  margin: 0;
   font-size: 1em;
 `;
 
-const logoutButton = styled.a`
-  float: right;
+const logoutButton = Button.extend`
   font-size: 1em;
+  padding: 0;
+  text-align: right;    
+  border-radius: 0;
+  display: block;
+  text-decoration: none;
+  &:hover, &:active {
+      cursor: default;
+    }
 `;
 
 const Container = styled.div`
