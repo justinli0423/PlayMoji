@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import Colors from './data/Colors';
 
-import {Field} from './FieldInput';
+import {FieldDynamic, Field} from './FieldInput';
 import {Songs} from './Songs';
 import {Button} from './Button';
 
@@ -73,8 +73,8 @@ export class Form extends Component {
     axios.post(`${server}/playlists`,{
       
         user:self.props.userid,
-        name:'test',
-        description:'test1',
+        name: document.getElementById('playlist').value,
+        description: document.getElementById('desc').value,
         tracks:song_info[0],
         artists:song_info[1],
         limit:50
@@ -104,9 +104,9 @@ export class Form extends Component {
     return (
       <Wrapper>
         <WrapperRow>
-            <Field placeholder='Playlist Name'></Field>
-            <Field placeholder='Description (Optional)'></Field>
-            <Field id='song-search' placeholder='Song Name' func={(val)=>{this.searchSong(val)}}></Field>
+            <Field id = 'playlist' placeholder='Playlist Name'></Field>
+            <Field id = 'desc' placeholder='Description (Optional)'></Field>
+            <FieldDynamic id='song-search' placeholder='Song Name' func={(val)=>{this.searchSong(val)}}></FieldDynamic>
             {this.state.search.length != 0 && <Songs flag_cap = {this.state.song_list.length >= 5}songsArray = {this.state.songs} callback={(val)=>{this.updateSong(val)}}/>}
             <Button onClick={this.createPlaylist.bind(this)}>Create Playlist</Button>
         </WrapperRow>

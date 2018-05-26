@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import Colors from './data/Colors';
 
-export class Field extends Component {
+export class FieldDynamic extends Component {
   render() {
     return (
       <Input id={this.props.id} placeholder = {this.props.placeholder} type = "text" name = {this.props.name} onChange={()=>this.props.func(document.getElementById(this.props.id).value)}/>        
@@ -11,6 +11,13 @@ export class Field extends Component {
   }
 };
 
+export class Field extends Component {
+  render() {
+    return (
+      <Input id={this.props.id} placeholder = {this.props.placeholder} type = "text" name = {this.props.name}/>        
+    );
+  }
+};
 
 const Input = styled.input`
     font-size: 2em;
