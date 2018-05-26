@@ -13,18 +13,17 @@ constructor(props) {
     }
 }
 
-  register(song) {
-    console.log(song);
-    console.log('test');
+  register(song, songId) {
+    this.setState.list = this.state.list.push(song);
+    // console.log(song);
   }
 
   render() {
       let songs = this.props.songsArray;
-    //   console.log(songs);
       console.log(this.state.list);
     return (
       <List>{songs.map((song) => {
-            return <Container><Content id = {songs.indexOf(song)} onClick = {this.register(song)}>{song.name}</Content><Button>Add</Button></Container> 
+            return <Container><Content id = {songs.indexOf(song)}>{song.name}</Content><Button  onClick = {this.register.bind(this, song)}>Add</Button></Container> 
         })}
       </List>
     );

@@ -10,14 +10,14 @@ export class Form extends Component {
 
   searchSong(val){
     if(val){
-      axios.post('http://ec2-18-191-120-207.us-east-2.compute.amazonaws.com:8080/tracks',{
+      axios.get('https://api.spotify.com/v1/search',{
         params:{
           q:val,
           type:'track',
           limit:10
         },
-        data:{
-          'token':`${this.props.token}`
+        headers:{
+          'Authorization':`Bearer ${this.props.token}`
         }
       }).then((result)=>{
         let songs = result.data.tracks.items;
