@@ -114,7 +114,7 @@ export class Form extends Component {
         {<Songs flag_cap = {this.state.song_list.length >= 5}songsArray = {this.state.songs} callback={(val)=>{this.updateSong(val)}}/>}        
         <WrapperRow_Center>
           {this.state.song_list.map((song, i) => {
-            return <Item><button id={i} onClick={this.removeSong.bind(this,i)}>x</button>{song.name}</Item>
+            return <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this,i)}>x</ButtonRemove><span>{song.name}</span></Item>
           })}
         </WrapperRow_Center>
       </Wrapper>
@@ -135,11 +135,19 @@ const Wrapper = styled.div`
 `;
 
 const Item = styled.span`
-  font-size: 2em;
   margin: .5em auto;
   padding-left: 3em;
 `;
 
+const ButtonRemove = Button.extend`
+  width: 1em;
+  padding: 0 .2em;
+  display: inline;
+  margin: .5em;
+  margin-top: 0;
+`;
+
 const WrapperRow_Center = WrapperRow.extend`
+  float: right;
   justify-content: flex-start;
 `
