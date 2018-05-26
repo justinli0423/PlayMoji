@@ -13,14 +13,12 @@ export class Login extends Component {
 };
 
 const Button = styled.a`
-    background-color: ${Colors.darkGreen};
     padding: .5em 2em;
     font-size: 2em;
     margin: 0 auto;
     margin-top: 2em;
-    width: 4em;
     text-align: center;
-    color: ${Colors.white};
+    color: ${Colors.black};
     border-radius: 5px;
     transition: all .5s;
     text-decoration: none;
@@ -28,6 +26,7 @@ const Button = styled.a`
 
     &:hover, &:active {
       background-color: ${Colors.green};
+      cursor: default;
       color: white;
     }
 `;

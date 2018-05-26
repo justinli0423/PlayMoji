@@ -16,7 +16,8 @@ export class Form extends Component {
     super(props);
     this.state = {
       song_list:[],
-      emoji_string:''
+      emoji_string:'',
+      success:false,
     };
   }
 
@@ -69,7 +70,6 @@ export class Form extends Component {
     return ret;
   }
   createPlaylist(){
-    //In progress
     let self = this;
     var song_info = self.formatListToString();
     console.log(this.state);
@@ -99,6 +99,10 @@ export class Form extends Component {
       }).then((result)=>{
         console.log(self);
         console.log(result);
+        self.setState({'success':true});
+        self.setState({
+          song_list: []
+        })
       },(err)=>{
         console.log(self);
         console.log('error',err);
@@ -121,6 +125,7 @@ export class Form extends Component {
       }).then((result)=>{
         console.log(self);
         console.log(result);
+        self.setState({'success':true});
       },(err)=>{
         console.log(self);
         console.log('error',err);
@@ -145,6 +150,7 @@ export class Form extends Component {
     return (
       <Wrapper>
         <WrapperRow>
+            {this.state.success && <Title>Successfully Created Playlist </Title>}
             <Field id = 'playlist' placeholder='Playlist Name'></Field>
             <Field id = 'desc' placeholder='Description (Optional)'></Field>
             <FieldDynamic id='song-search' placeholder='Song Name' func={(val)=>{this.searchSong(val)}}></FieldDynamic>
@@ -166,6 +172,7 @@ const WrapperRow = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin: 0 4em;
 `;
 
 const Wrapper = styled.div`
@@ -188,6 +195,12 @@ const ButtonRemove = Button.extend`
 `;
 
 const WrapperRow_Center = WrapperRow.extend`
-  float: right;
-  justify-content: flex-start;
+  justify-content: center;
+  margin: 0;
+  margin-top: -7em;
 `
+
+const Title = styled.h1`
+  font-size: 3em;
+  text-align: center;  
+`;
