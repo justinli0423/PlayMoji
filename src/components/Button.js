@@ -5,7 +5,7 @@ import Colors from './data/Colors';
 
 export class Login extends Component {
   render() {
-    const spotifyLink = 'https://accounts.spotify.com/authorize?client_id=5fe01282e94241328a84e7c5cc169164&redirect_uri=http:%2F%2Fexample.com%2Fcallback&scope=user-read-private%20user-read-email&response_type=token&state=123';
+    const spotifyLink = 'https://accounts.spotify.com/authorize?client_id=c9560e7e9d404ceba59a76165a446b1a&redirect_uri=http://localhost:3000&scope=playlist-modify-public&response_type=token';
     return (
       <Button href={spotifyLink}>{this.props.label}</Button>
     );
