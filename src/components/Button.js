@@ -31,3 +31,5 @@ const Button = styled.a`
       color: white;
     }
 `;
+
+export {Button};

@@ -5,7 +5,7 @@ import {instanceOf} from 'prop-types';
 import {withCookies,Cookies} from 'react-cookie'
 import {Login} from './components/Button';
 import {Form} from './components/Form';
-
+import {Button} from './components/Button';
 
 class App extends Component {
   static propTypes = {
@@ -25,7 +25,6 @@ class App extends Component {
     access_token = cookies.get('access_token');
     this.setState({'access_token':access_token});
 
-    
     axios.get('https://api.spotify.com/v1/me',{headers:{'Authorization':`Bearer ${access_token}`}}).then((data)=>{
       this.setState({'id':data.data.id});
     },(e)=>{
@@ -35,10 +34,22 @@ class App extends Component {
     console.log(this);
     
   }
+
+  logout(){
+    this.setState({'id':''});
+  }
+
   render() {
     return (
       <Wrapper>
-        <Login label = {"Sign in"}></Login>
+        {(!this.state.id) && <Login label = {"Sign in"}></Login>}
+        {!!this.state.id && 
+          <Welcome>
+            <h3>Welcome {this.state.id}</h3>
+            <logoutButton onClick={()=>this.setState({'id':''})}>Logout</logoutButton>
+            <br/>
+          </Welcome>
+        }
         <Form></Form> 
       </Wrapper>
     );
@@ -53,6 +64,21 @@ const Wrapper = styled.div`
   padding: 0;
   min-height: 100vh;
   width: 100%;
+`;
+
+const Welcome = styled.div`
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 2em;
+`;
+
+const logoutButton = styled.button`
+  display: block;
+  width: 100%;
+  text-align: center;
+  cursor: default !important;
+  z-index: 1;
 `;
 
 export default withCookies(App);

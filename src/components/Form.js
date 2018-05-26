@@ -9,10 +9,10 @@ export class Form extends Component {
   render() {
     return (
         <Wrapper>
-            <Field></Field>
-            <Field></Field>
-            <Field></Field>
-            <Field></Field>
+            <Field placeholder='Playlist Name'></Field>
+            <Field placeholder='Description (Optional)'></Field>
+            <Field placeholder='Song'></Field>
+            <Field placeholder='Artist'></Field>
         </Wrapper>
     );
   }
