@@ -5,6 +5,9 @@ import Colors from './data/Colors';
 
 import {Field} from './FieldInput';
 import {Songs} from './Songs';
+import {Button} from './Button';
+
+const server = 'http://ec2-18-191-120-207.us-east-2.compute.amazonaws.com:8080';
 
 export class Form extends Component {
 
@@ -17,7 +20,7 @@ export class Form extends Component {
 
   searchSong(val){  
     if(val){
-      axios.get('http://ec2-18-191-120-207.us-east-2.compute.amazonaws.com:8080/tracks',{
+      axios.get(`${server}/tracks`,{
         params:{
           q:val,
           type:'track',
@@ -49,13 +52,53 @@ export class Form extends Component {
     song_l.splice(id,1);
     this.setState({song_list:song_l});
   }
-componentWillMount(){
-  this.setState({
-    'song_list': [],
-    'songs': [],
-    'search': ''
-  })
-}
+
+  formatListToString(){
+    //Turns list into comma separated string
+    var sl = this.state.song_list;
+    console.log(sl);
+    var ret = ['','']; //0 - trackId, 1 - artistIds
+    sl.map((song)=>{
+      ret[0] += `${song.trackId},`;
+      ret[1] += `${song.artistId},`;
+    });
+    ret[0] = ret[0].slice(0,-1);
+    ret[1] = ret[1].slice(0,-1);
+    return ret;
+  }
+  createPlaylist(){
+    //In progress
+    let self = this;
+    var song_info = self.formatListToString();
+    axios.post(`${server}/playlists`,{
+      
+        user:self.props.userid,
+        name:'test',
+        description:'test1',
+        tracks:song_info[0],
+        artists:song_info[1],
+        limit:50
+      },
+      {
+        headers:{
+          'Authorization':`Bearer ${self.props.token}`
+      }
+    }).then((result)=>{
+      console.log(self);
+      console.log(result);
+    },(err)=>{
+      console.log(self);
+      console.log('error',err);
+    });
+  }
+
+  componentWillMount(){
+    this.setState({
+      'song_list': [],
+      'songs': [],
+      'search': ''
+    })
+  }
 
   render() {
     return (
@@ -65,6 +108,7 @@ componentWillMount(){
             <Field placeholder='Description (Optional)'></Field>
             <Field id='song-search' placeholder='Song Name' func={(val)=>{this.searchSong(val)}}></Field>
             {this.state.search.length != 0 && <Songs flag_cap = {this.state.song_list.length >= 5}songsArray = {this.state.songs} callback={(val)=>{this.updateSong(val)}}/>}
+            <Button onClick={this.createPlaylist.bind(this)}>Create Playlist</Button>
         </WrapperRow>
         <WrapperRow_Center>
           {this.state.song_list.map((song, i) => {

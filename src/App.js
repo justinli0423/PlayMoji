@@ -50,7 +50,7 @@ class App extends Component {
             <br/>
           </Welcome>
         }
-        <Form token={this.state.access_token}></Form> 
+        <Form token={this.state.access_token} userid={this.state.id}></Form> 
       </Wrapper>
     );
   }
