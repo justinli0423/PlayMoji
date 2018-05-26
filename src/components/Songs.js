@@ -23,10 +23,10 @@ constructor(props) {
     return (
       !this.props.flag_cap && <Wrapper>
           <List>{songs.slice(0, songs.length/2).map((song, i) => {
-            return<Container><Content id = {i}>{song.name}</Content><Button onClick = {this.register.bind(this, song)} src = {song.imageUrl}></Button></Container> 
+            return<Container><Content id = {i}>{song.name.length > 20 ? song.name.substring(0, 20) + '...': song.name}</Content><Button onClick = {this.register.bind(this, song)} src = {song.imageUrl}></Button></Container> 
         })}</List><List>
         {songs.slice(songs.length/2, songs.length).map((song, i) => {
-            return<Container><Content id = {i}>{song.name}</Content><Button onClick = {this.register.bind(this, song)} src = {song.imageUrl}></Button></Container> 
+            return<Container><Content id = {i}>{song.name.length > 20 ? song.name.substring(0, 20) + '...': song.name}</Content><Button onClick = {this.register.bind(this, song)} src = {song.imageUrl}></Button></Container> 
         })}
       </List>
       </Wrapper>
