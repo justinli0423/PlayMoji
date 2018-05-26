@@ -14,10 +14,10 @@ export class Login extends Component {
 
 const Button = styled.a`
     background-color: ${Colors.darkGreen};
-    padding: 1em 2em;
-    font-size: 2.5em;
+    padding: .5em 2em;
+    font-size: 2em;
     margin: 0 auto;
-    margin-bottom: 2em;
+    margin-top: 2em;
     width: 4em;
     text-align: center;
     color: ${Colors.white};
