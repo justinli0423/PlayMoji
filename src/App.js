@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 import {instanceOf} from 'prop-types';
 import {withCookies,Cookies} from 'react-cookie'
 import {Login} from './components/Button';
 import {Form} from './components/Form';
+
 
 class App extends Component {
   static propTypes = {
@@ -22,7 +24,16 @@ class App extends Component {
     }
     access_token = cookies.get('access_token');
     this.setState({'access_token':access_token});
+
+    
+    axios.get('https://api.spotify.com/v1/me',{headers:{'Authorization':`Bearer ${access_token}`}}).then((data)=>{
+      this.setState({'id':data.data.id});
+    },(e)=>{
+      console.log(e);
+    })
+
     console.log(this);
+    
   }
   render() {
     return (
