@@ -6,6 +6,7 @@ import Colors from './data/Colors';
 import {FieldDynamic, Field} from './FieldInput';
 import {Songs} from './Songs';
 import {Button} from './Button';
+import {Emoji} from './emoji';
 
 const server = 'http://ec2-18-191-120-207.us-east-2.compute.amazonaws.com:8080';
 
@@ -107,9 +108,10 @@ export class Form extends Component {
             <Field id = 'playlist' placeholder='Playlist Name'></Field>
             <Field id = 'desc' placeholder='Description (Optional)'></Field>
             <FieldDynamic id='song-search' placeholder='Song Name' func={(val)=>{this.searchSong(val)}}></FieldDynamic>
-            {this.state.search.length != 0 && <Songs flag_cap = {this.state.song_list.length >= 5}songsArray = {this.state.songs} callback={(val)=>{this.updateSong(val)}}/>}
             <Button onClick={this.createPlaylist.bind(this)}>Create Playlist</Button>
+            <Emoji/>
         </WrapperRow>
+        {<Songs flag_cap = {this.state.song_list.length >= 5}songsArray = {this.state.songs} callback={(val)=>{this.updateSong(val)}}/>}        
         <WrapperRow_Center>
           {this.state.song_list.map((song, i) => {
             return <Item><button id={i} onClick={this.removeSong.bind(this,i)}>x</button>{song.name}</Item>

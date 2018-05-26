@@ -20,8 +20,8 @@ constructor(props) {
   render() {
       let songs = this.props.songsArray || [];
     return (
-      !this.props.flag_cap && <List>{songs.map((song) => {
-            return <Container><Content id = {songs.indexOf(song)}>{song.name}</Content><Button  onClick = {this.register.bind(this, song)}>Add</Button></Container> 
+      !this.props.flag_cap && <List>{songs.map((song, i) => {
+            return<Container><Content id = {i}>{song.name}</Content><Button onClick = {this.register.bind(this, song)} src = {song.imageUrl}></Button></Container> 
         })}
       </List>
     );
@@ -33,31 +33,24 @@ export{exportList};
 const List = styled.div`
     margin-top: 5em;
     display: flex;
-    flex-direction: row;
     justify-content: space-around;
-    flex-shrink: 1;
-    flex-wrap: 1;
+    flex-wrap: wrap;
 `;
 
 const Content = styled.div`
     display: inline;
     font-size: 1.2em;
-    padding: 1em 0;
+    padding: 1em;
+    text-align: center;
 `;
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+    padding: .5em;
 `;
 
-const Button = styled.button`
-    background: transparent;
-    height: 25px;
-    /* border: transparent; */
-`;
-
-const Image = styled.img`
+const Button = styled.img`
     width: 60px;
-    height: 60px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 `;
