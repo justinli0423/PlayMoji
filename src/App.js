@@ -59,7 +59,7 @@ class App extends Component {
         <WrapperFlex>
           <Title>Spot.me</Title>
           {(!this.state.access_token) && <Login label = {"Sign in"}></Login>}
-          <Form token={this.state.access_token} userid={this.state.id}></Form> 
+          {!!this.state.access_token && <Form token={this.state.access_token} userid={this.state.id}></Form>} 
         </WrapperFlex>
       {!!this.state.access_token && 
           <Welcome>
