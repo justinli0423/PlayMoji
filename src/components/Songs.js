@@ -19,7 +19,6 @@ constructor(props) {
 
   render() {
       let songs = this.props.songsArray;
-      console.log(this.state.list);
     return (
       !this.props.flag_cap && <List>{songs.map((song) => {
             return <Container><Content id = {songs.indexOf(song)}>{song.name}</Content><Button  onClick = {this.register.bind(this, song)}>Add</Button></Container> 

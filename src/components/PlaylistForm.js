@@ -39,14 +39,16 @@ export class Form extends Component {
   }
 
   updateSong(val){
-    console.log(this.state);
     var song_l = this.state.song_list
     song_l.push(val);
-    console.log(song_l);
     this.setState({song_list:song_l});
-    // this.setState({song_list:this.state.song_list.push(val)});
   }
 
+  removeSong(id){
+    var song_l = this.state.song_list;
+    song_l.splice(id,1);
+    this.setState({song_list:song_l});
+  }
 componentWillMount(){
   this.setState({
     'song_list': [],
@@ -65,8 +67,8 @@ componentWillMount(){
             {this.state.search.length != 0 && <Songs flag_cap = {this.state.song_list.length >= 5}songsArray = {this.state.songs} callback={(val)=>{this.updateSong(val)}}/>}
         </WrapperRow>
         <WrapperRow_Center>
-          {this.state.song_list.map((song) => {
-            return <Item>{song.name}</Item>
+          {this.state.song_list.map((song, i) => {
+            return <Item><button id={i} onClick={this.removeSong.bind(this,i)}>x</button>{song.name}</Item>
           })}
         </WrapperRow_Center>
       </Wrapper>
