@@ -4,7 +4,7 @@ import axios from 'axios';
 import {instanceOf} from 'prop-types';
 import {withCookies,Cookies} from 'react-cookie'
 import {Login} from './components/Button';
-import {Form} from './components/Form';
+import {Form} from './components/PlaylistForm';
 import {Button} from './components/Button';
 
 class App extends Component {
@@ -26,7 +26,7 @@ class App extends Component {
     this.setState({'access_token':access_token});
 
     axios.get('https://api.spotify.com/v1/me',{headers:{'Authorization':`Bearer ${access_token}`}}).then((data)=>{
-      this.setState({'id':data.data.id});
+      this.setState({'id': data.data.id, 'display': data.data.display_name});
     },(e)=>{
       console.log(e);
     })
@@ -36,7 +36,7 @@ class App extends Component {
   }
 
   logout(){
-    this.setState({'id':''});
+    this.setState({'id': undefined, 'display': undefined});
   }
 
   render() {
@@ -45,7 +45,7 @@ class App extends Component {
         {(!this.state.id) && <Login label = {"Sign in"}></Login>}
         {!!this.state.id && 
           <Welcome>
-            <h3>Welcome {this.state.id}</h3>
+            <h3>Welcome {this.state.display}</h3>
             <logoutButton onClick={()=>this.setState({'id':''})}>Logout</logoutButton>
             <br/>
           </Welcome>
@@ -59,7 +59,7 @@ class App extends Component {
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
   margin: 0;
   padding: 0;
   min-height: 100vh;

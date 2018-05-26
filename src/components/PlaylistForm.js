@@ -11,8 +11,7 @@ export class Form extends Component {
         <Wrapper>
             <Field placeholder='Playlist Name'></Field>
             <Field placeholder='Description (Optional)'></Field>
-            <Field placeholder='Song'></Field>
-            <Field placeholder='Artist'></Field>
+            <Field placeholder='Song Name'></Field>
         </Wrapper>
     );
   }
