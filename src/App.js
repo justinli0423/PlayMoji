@@ -12,6 +12,15 @@ class App extends Component {
     cookies: instanceOf(Cookies).isRequired
   };
 
+  constructor(props){
+    super(props);
+
+    const {cookies} = this.props;
+    this.setState({
+      access_token:cookies.get('access_token') || null
+    })
+  }
+
   componentWillMount() {
     const { cookies } = this.props;
   
@@ -21,12 +30,14 @@ class App extends Component {
 
     if(access_token){
       cookies.set('access_token',access_token);
+      window.location = window.location.pathname;
     }
     access_token = cookies.get('access_token');
     this.setState({'access_token':access_token});
 
     axios.get('https://api.spotify.com/v1/me',{headers:{'Authorization':`Bearer ${access_token}`}}).then((data)=>{
       this.setState({'id': data.data.id, 'display': data.data.display_name});
+
     },(e)=>{
       console.log(e);
     })
@@ -36,17 +47,21 @@ class App extends Component {
   }
 
   logout(){
+    const {cookies} = this.props
+    console.log('Logging out');
     this.setState({'id': undefined, 'display': undefined});
+    cookies.remove('access_token');
+    window.location = window.location.pathname;
   }
 
   render() {
     return (
       <Wrapper>
-        {(!this.state.id) && <Login label = {"Sign in"}></Login>}
-        {!!this.state.id && 
+        {(!this.state.access_token) && <Login label = {"Sign in"}></Login>}
+        {!!this.state.access_token && 
           <Welcome>
             <h3>Welcome {this.state.display || this.state.id}</h3>
-            <logoutButton onClick={()=>this.setState({'id':''})}>Logout</logoutButton>
+            <logoutButton onClick={this.logout.bind(this)}>Logout</logoutButton>
             <br/>
           </Welcome>
         }
