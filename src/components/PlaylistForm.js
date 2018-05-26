@@ -68,7 +68,6 @@ export class Form extends Component {
     return ret;
   }
   createPlaylist(){
-    //In progress
     let self = this;
     var song_info = self.formatListToString();
     axios.post(`${server}/playlists`,{
@@ -85,12 +84,14 @@ export class Form extends Component {
           'Authorization':`Bearer ${self.props.token}`
       }
     }).then((result)=>{
-      console.log(self);
-      console.log(result);
+      this.setState({
+        song_list: []
+      });
     },(err)=>{
       console.log(self);
       console.log('error',err);
     });
+
   }
 
   componentWillMount(){
@@ -149,7 +150,7 @@ const ButtonRemove = Button.extend`
 `;
 
 const WrapperRow_Center = WrapperRow.extend`
-  float: right;
-  justify-content: flex-start;
+  justify-content: center;
   margin: 0;
+  margin-top: -7em;
 `
