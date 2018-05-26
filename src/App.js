@@ -7,6 +7,8 @@ import {Login} from './components/Button';
 import {Form} from './components/PlaylistForm';
 import {Button} from './components/Button';
 
+import Colors from './components/data/Colors';
+
 class App extends Component {
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired
@@ -30,9 +32,6 @@ class App extends Component {
     },(e)=>{
       console.log(e);
     })
-
-    console.log(this);
-    
   }
 
   logout(){
@@ -41,44 +40,58 @@ class App extends Component {
 
   render() {
     return (
-      <Wrapper>
-        {(!this.state.id) && <Login label = {"Sign in"}></Login>}
-        {!!this.state.id && 
+      <Container>
+        <WrapperFlex>
+          <Title>Spot.me</Title>
+          {(!this.state.id) && <Login label = {"Sign in"}></Login>}
+          <Form token={this.state.access_token} userid={this.state.id}></Form> 
+        </WrapperFlex>
+      {!!this.state.id && 
           <Welcome>
-            <h3>Welcome {this.state.display || this.state.id}</h3>
+            <h3>{this.state.display || this.state.id}</h3>
             <logoutButton onClick={()=>this.setState({'id':''})}>Logout</logoutButton>
             <br/>
           </Welcome>
         }
-        <Form token={this.state.access_token} userid={this.state.id}></Form> 
-      </Wrapper>
+      </Container>
     );
   }
 }
 
-const Wrapper = styled.div`
+const Title = styled.h1`
+  text-align: center;
+  font-size: 4em;
+`;
+
+const WrapperFlex = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   margin: 0;
   padding: 0;
-  min-height: 100vh;
   width: 100%;
+  height: 100%;
 `;
 
 const Welcome = styled.div`
   display: block;
-  width: 100%;
-  text-align: center;
-  font-size: 2em;
+  position: absolute;
+  padding: 0 2em;
+  top: 0;
+  right: 0;
+  margin: 0 auto;
+  font-size: 1em;
 `;
 
-const logoutButton = styled.button`
+const logoutButton = styled.a`
+  float: right;
+  font-size: 1em;
+`;
+
+const Container = styled.div`
   display: block;
-  width: 100%;
-  text-align: center;
-  cursor: default !important;
-  z-index: 1;
+  width: 100vw;
+  height: 100vh;
 `;
 
 export default withCookies(App);
