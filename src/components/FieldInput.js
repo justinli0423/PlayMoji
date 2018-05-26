@@ -6,7 +6,7 @@ import Colors from './data/Colors';
 export class Field extends Component {
   render() {
     return (
-      <Input placeholder = {this.props.placeholder} type = "text" name = {this.props.name}/>        
+      <Input id={this.props.id} placeholder = {this.props.placeholder} type = "text" name = {this.props.name} onChange={()=>this.props.func(document.getElementById(this.props.id).value)}/>        
     );
   }
 };

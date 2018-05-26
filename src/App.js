@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import {instanceOf} from 'prop-types';
-import {withCookies,Cookies} from 'react-cookie'
+import {withCookies,Cookies} from 'react-cookie';
 import {Login} from './components/Button';
 import {Form} from './components/PlaylistForm';
 import {Button} from './components/Button';
@@ -45,12 +45,12 @@ class App extends Component {
         {(!this.state.id) && <Login label = {"Sign in"}></Login>}
         {!!this.state.id && 
           <Welcome>
-            <h3>Welcome {this.state.display}</h3>
+            <h3>Welcome {this.state.display || this.state.id}</h3>
             <logoutButton onClick={()=>this.setState({'id':''})}>Logout</logoutButton>
             <br/>
           </Welcome>
         }
-        <Form></Form> 
+        <Form token={this.state.access_token}></Form> 
       </Wrapper>
     );
   }
