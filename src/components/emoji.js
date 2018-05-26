@@ -61,13 +61,17 @@ export class Emoji extends Component {
         </Wrapper>
         <Wrapper>
         {this.state.emoji_string.map((e,i)=>{
-          return (<p>{e.emoji}</p>)
+          return (<Emojis>{e.emoji}</Emojis>)
         })}
         </Wrapper>
       </Template> 
     );
   }
 };
+
+const Emojis = styled.p`
+  font-size: 20px;
+`;
 
 const Wrapper = styled.div`
   padding-top:20px;
@@ -81,6 +85,7 @@ const Emojibtn = styled.button`
   padding:0;
   border: none;
   background:none;
+  font-size: 15px;
 `;
 
 const Content = styled.div`
