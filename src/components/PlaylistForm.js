@@ -17,7 +17,7 @@ export class Form extends Component {
 
   searchSong(val){  
     if(val){
-      axios.get('https://api.spotify.com/v1/search',{
+      axios.get('http://ec2-18-191-120-207.us-east-2.compute.amazonaws.com:8080/tracks',{
         params:{
           q:val,
           type:'track',
@@ -27,7 +27,7 @@ export class Form extends Component {
           'Authorization':`Bearer ${this.props.token}`
         }
       }).then((result)=>{
-        let songs = result.data.tracks.items;
+        let songs = result.data.tracks;
         this.setState({
           'songs': songs,
           'search': val.length
