@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import Colors from './data/Colors';
 
-import {songData} from './PlaylistForm';
+var exportList;
 
 export class Songs extends Component {
 constructor(props) {
@@ -14,21 +14,22 @@ constructor(props) {
 }
 
   register(song, songId) {
-    this.setState.list = this.state.list.push(song);
-    // console.log(song);
+      this.props.callback(song);
   }
 
   render() {
       let songs = this.props.songsArray;
       console.log(this.state.list);
     return (
-      <List>{songs.map((song) => {
+      !this.props.flag_cap && <List>{songs.map((song) => {
             return <Container><Content id = {songs.indexOf(song)}>{song.name}</Content><Button  onClick = {this.register.bind(this, song)}>Add</Button></Container> 
         })}
       </List>
     );
   }
 };
+
+export{exportList};
 
 const List = styled.div`
     margin-top: 5em;

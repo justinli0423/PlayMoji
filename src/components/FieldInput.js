@@ -15,7 +15,7 @@ export class Field extends Component {
 const Input = styled.input`
     font-size: 2em;
     margin: .5em auto;
-    width: 20em;
+    /* width: 15em; */
     color: ${Colors.black};
     background-color: ${Colors.white};
     border-radius: 5px;
