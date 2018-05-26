@@ -27,10 +27,12 @@ const Input = styled.input`
     transition: all .5s;
     padding: 0.5em;
     border: none;
-    border-bottom: 2px solid ${Colors.black};
+    border-bottom: 2px solid ${Colors.grey};
+    transition: all .3s;
 
 
     &:focus {
       outline: none;
+      border-bottom: 2px solid ${Colors.black};
     }
 `;
