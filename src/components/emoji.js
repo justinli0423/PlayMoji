@@ -9,12 +9,12 @@ export class Emoji extends Component {
   constructor(props){
     super(props);
     this.state = {
-      emoji_list:[]
+      emoji_list:[],
+      emoji_string:[],
     };
   }
 
   emojiGet(){
-      console.log('asdf');
       axios.get(`${server}`).then((result)=>{
         let songs = result.data;
         this.setState({
@@ -32,22 +32,61 @@ export class Emoji extends Component {
   
   }
 
-  render() {
-    console.log('asdf');    
-    return (
-      <Wrapper>
+  addEmoji(emoji){
+    var curr = this.state.emoji_string;
+    curr.push(emoji);
+    this.setState({emoji_string:curr});
 
-      </Wrapper>
+    this.props.emojiCallback(this.formatEmojiString(this.state.emoji_string));
+  }
+
+  formatEmojiString(emoji_list){
+    var estring = '';
+    for(let e of emoji_list){
+      estring += `${e.unicode}_`;
+    }
+    estring = estring.slice(0,-1);
+
+    return estring;
+  }
+
+  render() {
+    let emojis = this.state.emoji_list;
+    return (
+      <Template>
+        <Wrapper>
+          {emojis.map((emoji, i) => {
+            return (<Emojibtn onClick={this.addEmoji.bind(this,emoji)}>{emoji.emoji}</Emojibtn>)          
+          })}
+        </Wrapper>
+        <Wrapper>
+        {this.state.emoji_string.map((e,i)=>{
+          return (<p>{e.emoji}</p>)
+        })}
+        </Wrapper>
+      </Template> 
     );
   }
 };
 
 const Wrapper = styled.div`
+  padding-top:20px;
   display: flex;
   flex-direction: row;
   justify-content: center;
 `;
 
+const Emojibtn = styled.button`
+  background-color:inherit;
+  padding:0;
+  border: none;
+  background:none;
+`;
+
 const Content = styled.div`
+
+`;
+
+const Template = styled.div`
 
 `;

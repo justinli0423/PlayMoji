@@ -9,13 +9,14 @@ import {Button} from './Button';
 import {Emoji} from './emoji';
 
 const server = 'http://ec2-18-191-120-207.us-east-2.compute.amazonaws.com:8080';
-
+const emojiapi = 'https://emojistoemotions.herokuapp.com/emojicollection/';
 export class Form extends Component {
 
   constructor(props){
     super(props);
     this.state = {
-      song_list:[]
+      song_list:[],
+      emoji_string:''
     };
   }
 
@@ -71,26 +72,65 @@ export class Form extends Component {
     //In progress
     let self = this;
     var song_info = self.formatListToString();
-    axios.post(`${server}/playlists`,{
+    console.log(this.state);
+    axios.get(`${emojiapi}${this.state.emoji_string}`).then((res)=>{
+      var data = res.data;
+      console.log(data)
+      axios.post(`${server}/playlists`,{
       
         user:self.props.userid,
         name: document.getElementById('playlist').value,
         description: document.getElementById('desc').value,
         tracks:song_info[0],
         artists:song_info[1],
-        limit:50
+        limit:50,
+        danceability:data.danceability,
+        energy:data.energy,
+        liveness:data.liveness,
+        loudness:data.loudness,
+        mode:data.mode,
+        popularity:data.popularity,
+        valence:data.valence
       },
       {
         headers:{
           'Authorization':`Bearer ${self.props.token}`
       }
-    }).then((result)=>{
-      console.log(self);
-      console.log(result);
-    },(err)=>{
-      console.log(self);
-      console.log('error',err);
+      }).then((result)=>{
+        console.log(self);
+        console.log(result);
+      },(err)=>{
+        console.log(self);
+        console.log('error',err);
+      });
+    },(e)=>{
+      axios.post(`${server}/playlists`,{
+      
+        user:self.props.userid,
+        name: document.getElementById('playlist').value,
+        description: document.getElementById('desc').value,
+        tracks:song_info[0],
+        artists:song_info[1],
+        limit:50,
+        
+      },
+      {
+        headers:{
+          'Authorization':`Bearer ${self.props.token}`
+      }
+      }).then((result)=>{
+        console.log(self);
+        console.log(result);
+      },(err)=>{
+        console.log(self);
+        console.log('error',err);
+      });
     });
+    };
+
+  getEmojiString(val){
+    console.log(val);
+    this.setState({'emoji_string':val});
   }
 
   componentWillMount(){
@@ -109,7 +149,7 @@ export class Form extends Component {
             <Field id = 'desc' placeholder='Description (Optional)'></Field>
             <FieldDynamic id='song-search' placeholder='Song Name' func={(val)=>{this.searchSong(val)}}></FieldDynamic>
             <Button onClick={this.createPlaylist.bind(this)}>Create Playlist</Button>
-            <Emoji/>
+            <Emoji emojiCallback={(val)=>{this.getEmojiString(val)}}/>
         </WrapperRow>
         {<Songs flag_cap = {this.state.song_list.length >= 5}songsArray = {this.state.songs} callback={(val)=>{this.updateSong(val)}}/>}        
         <WrapperRow_Center>
