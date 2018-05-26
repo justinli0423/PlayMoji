@@ -19,16 +19,25 @@ constructor(props) {
 
   render() {
       let songs = this.props.songsArray || [];
+
     return (
-      !this.props.flag_cap && <List>{songs.map((song, i) => {
+      !this.props.flag_cap && <Wrapper>
+          <List>{songs.slice(0, songs.length/2).map((song, i) => {
+            return<Container><Content id = {i}>{song.name}</Content><Button onClick = {this.register.bind(this, song)} src = {song.imageUrl}></Button></Container> 
+        })}</List><List>
+        {songs.slice(songs.length/2, songs.length).map((song, i) => {
             return<Container><Content id = {i}>{song.name}</Content><Button onClick = {this.register.bind(this, song)} src = {song.imageUrl}></Button></Container> 
         })}
       </List>
+      </Wrapper>
     );
   }
 };
 
 export{exportList};
+
+const Wrapper = styled.div`
+`;
 
 const List = styled.div`
     margin-top: 5em;
@@ -49,7 +58,7 @@ const Container = styled.div`
 `;
 
 const Button = styled.img`
-    width: 60px;
+    width: 200px;
     display: block;
     margin-left: auto;
     margin-right: auto;

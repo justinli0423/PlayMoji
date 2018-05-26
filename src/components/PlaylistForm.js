@@ -126,6 +126,7 @@ const WrapperRow = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin: 0 4em;
 `;
 
 const Wrapper = styled.div`
@@ -150,4 +151,5 @@ const ButtonRemove = Button.extend`
 const WrapperRow_Center = WrapperRow.extend`
   float: right;
   justify-content: flex-start;
+  margin: 0;
 `
