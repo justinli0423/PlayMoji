@@ -22,9 +22,9 @@ export class Songs extends Component {
       !this.props.flag_cap && <Wrapper>
         <List>{songs.length != 0 && songs.slice(0, songs.length / 2).map((song, i) => <Container><Button onClick={this.register.bind(this, song)} src={song.imageUrl} /><Content id={i}>{song.name.length > 10 ? `${song.name.substring(0, 10)}...` : song.name}</Content></Container>)}
         </List><List>
-          {songs.slice(songs.length / 2, songs.length).map((song, i) => <Container><Button onClick={this.register.bind(this, song)} src={song.imageUrl} /><Content id={i}>{song.name.length > 10 ? `${song.name.substring(0, 10) }...` : song.name}</Content></Container>)}
-               </List>
-        </Wrapper>
+          {songs.slice(songs.length / 2, songs.length).map((song, i) => <Container><Button onClick={this.register.bind(this, song)} src={song.imageUrl} /><Content id={i}>{song.name.length > 10 ? `${song.name.substring(0, 10)}...` : song.name}</Content></Container>)}
+        </List>
+                              </Wrapper>
     );
   }
 }
@@ -41,23 +41,25 @@ const Wrapper = styled.div`
 const List = styled.div`
     margin-top: 5em;
     display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
+    justify-content: space-evenly;
+    flex-shrink: 1;
 `;
 
 const Content = styled.div`
-    display: inline;
-    font-size: 1.2em;
-    padding: 1em;
+    display: block;
+    font-size: 1.4em;
     text-align: center;
+    margin-top: 4px;
 `;
 
 const Container = styled.div`
     padding: .5em;
     transition: all .3s;
-
+    margin-right: 2rem;
+    box-shadow: 2px 2px 5px ${Colors.grey};
     &:hover {
       transform: scale(1.2);
+      box-shadow: 7px 7px 5px ${Colors.grey};
     }
 `;
 
