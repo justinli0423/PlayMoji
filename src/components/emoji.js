@@ -66,15 +66,21 @@ export class Emoji extends Component {
             return (<Emojibtn onClick={this.addEmoji.bind(this,emoji)}>{emoji.emoji}</Emojibtn>)          
           })}
         </Wrapper>
-        <Wrapper>
+        <WrapperSelect>
         {this.state.emoji_string.map((e,i)=>{
           return (<Emojis>{e.emoji}</Emojis>)
         })}
-        </Wrapper>
+        </WrapperSelect>
       </Template> 
     );
   }
 };
+
+const Title = styled.h1`
+  padding-top: 1em;
+  font-size: 2em;
+  text-align: center;  
+`;
 
 const Emojis = styled.p`
   font-size: 2em;
@@ -102,7 +108,20 @@ const Emojibtn = styled.button`
     margin-left: -5.5px;
     margin-right: -5px;
   }
+
+  &:focus {
+    box-shadow: transparent;
+    outline: none;
+  }
   
+`;
+
+const WrapperSelect = Wrapper.extend`
+  position: absolute;
+  top: 75%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
 `;
 
 const Template = styled.div`

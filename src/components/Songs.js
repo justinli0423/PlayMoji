@@ -20,9 +20,9 @@ export class Songs extends Component {
 
     return (
       !this.props.flag_cap && <Wrapper>
-        <List>{songs.length != 0 && <Title>Make your Selections!</Title>}{songs.slice(0, songs.length / 2).map((song, i) => <Container><Content id={i}>{song.name.length > 20 ? `${song.name.substring(0, 20)}...` : song.name}</Content><Button onClick={this.register.bind(this, song)} src={song.imageUrl} /></Container>)}
+        <List>{songs.length != 0 && songs.slice(0, songs.length / 2).map((song, i) => <Container><Content id={i}>{song.name.length > 10 ? `${song.name.substring(0, 10)}...` : song.name}</Content><Button onClick={this.register.bind(this, song)} src={song.imageUrl} /></Container>)}
         </List><List>
-          {songs.slice(songs.length / 2, songs.length).map((song, i) => <Container><Content id={i}>{song.name.length > 20 ? `${song.name.substring(0, 20) }...` : song.name}</Content><Button onClick={this.register.bind(this, song)} src={song.imageUrl} /></Container>)}
+          {songs.slice(songs.length / 2, songs.length).map((song, i) => <Container><Content id={i}>{song.name.length > 10 ? `${song.name.substring(0, 10) }...` : song.name}</Content><Button onClick={this.register.bind(this, song)} src={song.imageUrl} /></Container>)}
                </List>
         </Wrapper>
     );
@@ -36,7 +36,6 @@ const Title = styled.h1`
 `;
 
 const Wrapper = styled.div`
-  margin-top: -3em;
 `;
 
 const List = styled.div`
@@ -58,7 +57,7 @@ const Container = styled.div`
 `;
 
 const Button = styled.img`
-    width: 15em;
+    width: 10em;
     display: block;
     margin-left: auto;
     margin-right: auto;

@@ -155,14 +155,12 @@ export class Form extends Component {
             <Field id = 'desc' required placeholder='Description'></Field>
             <FieldDynamic id='song-search' required placeholder='Search a song!' func={(val)=>{this.searchSong(val)}}></FieldDynamic>
             <Emoji emojiCallback={(val)=>{this.getEmojiString(val)}}/>
-            <Button onClick={this.createPlaylist.bind(this)}>Create Playlist</Button>
-        </WrapperRow>
         {<Songs flag_cap = {this.state.song_list.length >= 5}songsArray = {this.state.songs} callback={(val)=>{this.updateSong(val)}}/>}        
-        <WrapperRow_Center>
           {this.state.song_list.map((song, i) => {
             return <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this,i)}>x</ButtonRemove><span>{song.name}</span></Item>
           })}
-        </WrapperRow_Center>
+            <ButtonCreate onClick={this.createPlaylist.bind(this)}>Create Playlist</ButtonCreate>
+        </WrapperRow>
       </Wrapper>
     );
   }
@@ -184,6 +182,10 @@ const Wrapper = styled.div`
 const Item = styled.span`
   margin: .5em auto;
   padding-left: 3em;
+`;
+
+const ButtonCreate = Button.extend`
+  margin-top: 5em;
 `;
 
 const ButtonRemove = Button.extend`

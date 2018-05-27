@@ -76,16 +76,22 @@ class App extends Component {
 const Title = styled.h1`
   text-align: center;
   font-size: 6em;
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const WrapperFlex = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  position: relative;
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
+  margin-top: 10em;
 `;
 
 const Welcome = styled.div`
