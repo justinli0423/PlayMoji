@@ -52,10 +52,17 @@ export class Emoji extends Component {
 
   render() {
     let emojis = this.state.emoji_list;
+    let emojis_1 = emojis.slice(0, emojis.length/2);
+    let emojis_2 = emojis.slice(emojis.length/2, emojis.length);
     return (
       <Template>
         <Wrapper>
-          {emojis.map((emoji, i) => {
+          {emojis_1.map((emoji, i) => {
+            return (<Emojibtn onClick={this.addEmoji.bind(this,emoji)}>{emoji.emoji}</Emojibtn>)          
+          })}
+        </Wrapper>
+        <Wrapper>
+          {emojis_2.map((emoji, i) => {
             return (<Emojibtn onClick={this.addEmoji.bind(this,emoji)}>{emoji.emoji}</Emojibtn>)          
           })}
         </Wrapper>
@@ -70,11 +77,12 @@ export class Emoji extends Component {
 };
 
 const Emojis = styled.p`
-  font-size: 20px;
+  font-size: 2em;
 `;
 
 const Wrapper = styled.div`
   padding-top:20px;
+  height: 5em;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -82,16 +90,21 @@ const Wrapper = styled.div`
 
 const Emojibtn = styled.button`
   background-color:inherit;
-  padding:0;
+  padding: 0;
+  margin: 5px;
   border: none;
   background:none;
-  font-size: 15px;
-`;
+  font-size: 2em;
+  transition: all .3s;
 
-const Content = styled.div`
-
+  &:hover {
+    font-size: 3.5em;
+    margin-left: -5.5px;
+    margin-right: -5px;
+  }
+  
 `;
 
 const Template = styled.div`
-
+  height: 13em;
 `;

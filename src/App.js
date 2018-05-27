@@ -11,7 +11,7 @@ import Colors from './components/data/Colors';
 
 class App extends Component {
   static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
+    cookies: instanceOf(Cookies).isRequired,
   };
 
   constructor(props){

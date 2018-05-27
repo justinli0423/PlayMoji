@@ -151,11 +151,11 @@ export class Form extends Component {
       <Wrapper>
         <WrapperRow>
             {this.state.success && <Title>Successfully Created Playlist </Title>}
-            <Field id = 'playlist' placeholder='Playlist Name'></Field>
-            <Field id = 'desc' placeholder='Description'></Field>
-            <FieldDynamic id='song-search' placeholder='Song Name' func={(val)=>{this.searchSong(val)}}></FieldDynamic>
-            <Button onClick={this.createPlaylist.bind(this)}>Create Playlist</Button>
+            <Field id = 'playlist' required placeholder='Playlist Name'></Field>
+            <Field id = 'desc' required placeholder='Description'></Field>
+            <FieldDynamic id='song-search' required placeholder='Search a song!' func={(val)=>{this.searchSong(val)}}></FieldDynamic>
             <Emoji emojiCallback={(val)=>{this.getEmojiString(val)}}/>
+            <Button onClick={this.createPlaylist.bind(this)}>Create Playlist</Button>
         </WrapperRow>
         {<Songs flag_cap = {this.state.song_list.length >= 5}songsArray = {this.state.songs} callback={(val)=>{this.updateSong(val)}}/>}        
         <WrapperRow_Center>
