@@ -113,7 +113,6 @@ const Emojibtn = styled.button`
     box-shadow: transparent;
     outline: none;
   }
-  
 `;
 
 const WrapperSelect = Wrapper.extend`
