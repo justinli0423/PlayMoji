@@ -8,7 +8,7 @@ import {Songs} from './Songs';
 import {Button} from './Button';
 import {Emoji} from './emoji';
 
-const server = 'http://ec2-18-191-120-207.us-east-2.compute.amazonaws.com:8080';
+const server = 'https://spotify-playlist-generator-api.herokuapp.com';
 const emojiapi = 'https://emojistoemotions.herokuapp.com/emojicollection/';
 export class Form extends Component {
 
@@ -40,6 +40,11 @@ export class Form extends Component {
         });
       },(e)=>{
         console.log('error',e);
+      });
+    }else{
+      this.setState({
+        'songs':[],
+        'search':0
       });
     }
   }
