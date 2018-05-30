@@ -11,14 +11,20 @@ export class Emoji extends Component {
     this.state = {
       emoji_list:[],
       emoji_string:[],
+      emoji_select:[],
     };
   }
 
   emojiGet(){
       axios.get(`${server}`).then((result)=>{
-        let songs = result.data;
+        let emojis = result.data;
+        let emojis_selected = [];
+        emojis.map((el, i) => {
+          emojis_selected.push(false);
+        });
         this.setState({
-          emoji_list: songs
+          emoji_list: emojis,
+          emoji_select: emojis_selected
         });
       },(e)=>{
         console.log('error',e);
@@ -32,10 +38,15 @@ export class Emoji extends Component {
   
   }
 
-  addEmoji(emoji){
-    var curr = this.state.emoji_string;
+  addEmoji(emoji, id){
+    let curr = this.state.emoji_string;
+    let tempArr = this.state.emoji_select;    
     curr.push(emoji);
-    this.setState({emoji_string:curr});
+    tempArr[id] = true;
+    this.setState({
+      emoji_select: tempArr,
+      emoji_string:curr
+    })
 
     this.props.emojiCallback(this.formatEmojiString(this.state.emoji_string));
   }
@@ -54,40 +65,39 @@ export class Emoji extends Component {
     let emojis = this.state.emoji_list;
     let emojis_1 = emojis.slice(0, emojis.length/2);
     let emojis_2 = emojis.slice(emojis.length/2, emojis.length);
+
+    const selectEmoji = function(index) {
+      return this.state.emoji_select[index] ? EmojibtnSelect : Emojibtn;
+    }
+
     return (
       <Template>
         <Wrapper>
           {emojis_1.map((emoji, i) => {
-            return (<Emojibtn onClick={this.addEmoji.bind(this,emoji)}>{emoji.emoji}</Emojibtn>)          
+            return (this.state.emoji_select[i] ? 
+              <EmojibtnSelect id = {`emoji__${i}`} onClick={this.addEmoji.bind(this, emoji, i)}>{emoji.emoji}</EmojibtnSelect> :
+              <Emojibtn id = {`emoji__${i}`} onClick={this.addEmoji.bind(this, emoji, i)}>{emoji.emoji}</Emojibtn>
+            )
           })}
         </Wrapper>
         <Wrapper>
           {emojis_2.map((emoji, i) => {
-            return (<Emojibtn onClick={this.addEmoji.bind(this,emoji)}>{emoji.emoji}</Emojibtn>)          
+            return (this.state.emoji_select[i + emojis.length/2] ? 
+              <EmojibtnSelect id = {`emoji__${i + emojis.length/2}`} onClick={this.addEmoji.bind(this, emoji, i + emojis.length/2)}>{emoji.emoji}</EmojibtnSelect> :
+              <Emojibtn id = {`emoji__${i + emojis.length/2}`} onClick={this.addEmoji.bind(this, emoji, i + emojis.length/2)}>{emoji.emoji}</Emojibtn>
+            )
           })}
         </Wrapper>
-        <WrapperSelect>
-        {this.state.emoji_string.map((e,i)=>{
-          return (<Emojis>{e.emoji}</Emojis>)
-        })}
-        </WrapperSelect>
       </Template> 
     );
   }
 };
-
-const Title = styled.h1`
-  padding-top: 1em;
-  font-size: 2em;
-  text-align: center;  
-`;
 
 const Emojis = styled.p`
   font-size: 2em;
 `;
 
 const Wrapper = styled.div`
-  padding-top:20px;
   height: 5em;
   display: flex;
   flex-direction: row;
@@ -100,19 +110,21 @@ const Emojibtn = styled.button`
   margin: 5px;
   border: none;
   background:none;
-  font-size: 2em;
+  font-size: 1.7em;
   transition: all .3s;
 
   &:hover {
-    font-size: 3.5em;
-    margin-left: -5.5px;
-    margin-right: -5px;
+    transform: scale(1.5);
   }
 
   &:focus {
     box-shadow: transparent;
     outline: none;
   }
+`;
+
+const EmojibtnSelect = Emojibtn.extend`
+  transform: scale(1.5);
 `;
 
 const WrapperSelect = Wrapper.extend`

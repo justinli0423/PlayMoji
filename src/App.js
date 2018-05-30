@@ -75,11 +75,11 @@ class App extends Component {
 
 const Title = styled.h1`
   text-align: center;
-  font-size: 6em;
+  font-size: 5em;
   position: absolute;
   top: 0%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -130%);
 `;
 
 const WrapperFlex = styled.div`

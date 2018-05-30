@@ -159,11 +159,11 @@ export class Form extends Component {
             <Field id = 'playlist' required placeholder='Playlist Name'></Field>
             <Field id = 'desc' required placeholder='Description'></Field>
             <FieldDynamic id='song-search' required placeholder='Search a song!' func={(val)=>{this.searchSong(val)}}></FieldDynamic>
+            {<Songs flag_cap = {this.state.song_list.length >= 5}songsArray = {this.state.songs} callback={(val)=>{this.updateSong(val)}}/>}        
+             {this.state.song_list.map((song, i) => {
+               return <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this,i)}>x</ButtonRemove><span>{song.name}</span></Item>
+             })}
             <Emoji emojiCallback={(val)=>{this.getEmojiString(val)}}/>
-        {<Songs flag_cap = {this.state.song_list.length >= 5}songsArray = {this.state.songs} callback={(val)=>{this.updateSong(val)}}/>}        
-          {this.state.song_list.map((song, i) => {
-            return <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this,i)}>x</ButtonRemove><span>{song.name}</span></Item>
-          })}
             <ButtonCreate onClick={this.createPlaylist.bind(this)}>Create Playlist</ButtonCreate>
         </WrapperRow>
       </Wrapper>
