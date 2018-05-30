@@ -23,9 +23,9 @@ class App extends Component {
     })
   }
 
-  componentWillMount() {
+  componentWillMount(){
     const { cookies } = this.props;
-  
+
     var params = new URLSearchParams(window.location.hash.slice(1,));
 
     var access_token = params.get('access_token');
@@ -39,9 +39,13 @@ class App extends Component {
 
     axios.get('https://api.spotify.com/v1/me',{headers:{'Authorization':`Bearer ${access_token}`}}).then((data)=>{
       this.setState({'id': data.data.id, 'display': data.data.display_name});
-
     },(e)=>{
       console.log(e);
+      if(e.response.status == 401 && access_token != null){
+        console.log('Token has expired, logging out')
+        cookies.remove('access_token')
+        window.location = window.location.pathname;
+      }
     })
   }
 
@@ -59,12 +63,12 @@ class App extends Component {
         <WrapperFlex>
           <Title>playmoji</Title>
           {(!this.state.access_token) && <Login label = {"Sign in"}></Login>}
-          {!!this.state.access_token && <Form token={this.state.access_token} userid={this.state.id}></Form>} 
+          {!!this.state.access_token && <Form token={this.state.access_token} userid={this.state.id}></Form>}
         </WrapperFlex>
-      {!!this.state.access_token && 
+      {!!this.state.access_token &&
           <Welcome>
             <h3>{this.state.display || this.state.id}</h3>
-            <logoutButton onClick={this.logout.bind(this)}>Logout</logoutButton>
+            <logoutButton style={buttonStyles} onClick={this.logout.bind(this)}>Logout</logoutButton>
             <br/>
           </Welcome>
         }
@@ -106,9 +110,10 @@ const Welcome = styled.div`
 `;
 
 const logoutButton = Button.extend`
+  float: right;
   font-size: 1em;
   padding: 0;
-  text-align: right;    
+  text-align: right;
   border-radius: 0;
   display: block;
   text-decoration: none;
@@ -116,6 +121,10 @@ const logoutButton = Button.extend`
       cursor: default;
     }
 `;
+
+var buttonStyles = {
+    float: "right"
+};
 
 const Container = styled.div`
   display: block;
