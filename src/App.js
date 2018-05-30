@@ -83,7 +83,7 @@ const Title = styled.h1`
   position: absolute;
   top: 0%;
   left: 50%;
-  transform: translate(-50%, -130%);
+  transform: translate(-50%, -50%);
 `;
 
 const WrapperFlex = styled.div`

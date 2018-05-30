@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import Colors from './data/Colors';
+import _ from 'lodash';
 
 const server = 'https://emojistoemotions.herokuapp.com/emojicollection';
 
@@ -39,15 +39,24 @@ export class Emoji extends Component {
   }
 
   addEmoji(emoji, id){
+    let check = -1;
     let curr = this.state.emoji_string;
-    let tempArr = this.state.emoji_select;    
-    curr.push(emoji);
-    tempArr[id] = true;
+    let tempArr = this.state.emoji_select;
+    tempArr[id] = !tempArr[id];
+    curr.map((item, i) => {
+      if(_.isEqual(emoji, item)) {
+        check = i;
+      }
+    })
+    if(check != -1) {
+      curr.splice(check, 1);
+    } else {
+      curr.push(emoji);
+    }
     this.setState({
       emoji_select: tempArr,
       emoji_string:curr
     })
-
     this.props.emojiCallback(this.formatEmojiString(this.state.emoji_string));
   }
 
@@ -57,7 +66,6 @@ export class Emoji extends Component {
       estring += `${e.unicode}_`;
     }
     estring = estring.slice(0,-1);
-
     return estring;
   }
 
@@ -93,10 +101,6 @@ export class Emoji extends Component {
   }
 };
 
-const Emojis = styled.p`
-  font-size: 2em;
-`;
-
 const Wrapper = styled.div`
   height: 5em;
   display: flex;
@@ -114,7 +118,7 @@ const Emojibtn = styled.button`
   transition: all .3s;
 
   &:hover {
-    transform: scale(1.5);
+    transform: scale(1.7);
   }
 
   &:focus {
@@ -125,14 +129,6 @@ const Emojibtn = styled.button`
 
 const EmojibtnSelect = Emojibtn.extend`
   transform: scale(1.5);
-`;
-
-const WrapperSelect = Wrapper.extend`
-  position: absolute;
-  top: 75%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
 `;
 
 const Template = styled.div`

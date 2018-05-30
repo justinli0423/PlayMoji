@@ -21,10 +21,11 @@ export class Songs extends Component {
     return (
       !this.props.flag_cap && <Wrapper>
         <List>{songs.length != 0 && songs.slice(0, songs.length / 2).map((song, i) => <Container><Button onClick={this.register.bind(this, song)} src={song.imageUrl} /><Content id={i}>{song.name.length > 10 ? `${song.name.substring(0, 10)}...` : song.name}</Content></Container>)}
-        </List><List>
+        </List>
+        <List>
           {songs.slice(songs.length / 2, songs.length).map((song, i) => <Container><Button onClick={this.register.bind(this, song)} src={song.imageUrl} /><Content id={i}>{song.name.length > 10 ? `${song.name.substring(0, 10)}...` : song.name}</Content></Container>)}
         </List>
-                              </Wrapper>
+      </Wrapper>
     );
   }
 }

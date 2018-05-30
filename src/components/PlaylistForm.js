@@ -170,13 +170,6 @@ export class Form extends Component {
                return <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this,i)}>x</ButtonRemove><span>{song.name}</span></Item>
              })}
             <Emoji emojiCallback={(val)=>{this.getEmojiString(val)}}/>
-<<<<<<< HEAD
-=======
-        {<Songs flag_cap = {this.state.song_list.length >= 5}songsArray = {this.state.songs} callback={(val)=>{this.updateSong(val)}}/>}
-          {this.state.song_list.map((song, i) => {
-            return <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this,i)}>x</ButtonRemove><span>{song.name}</span></Item>
-          })}
->>>>>>> 732d45db9132cbe3b163b97008c18667ca30a6c7
             <ButtonCreate onClick={this.createPlaylist.bind(this)}>Create Playlist</ButtonCreate>
         </WrapperRow>
       </Wrapper>
