@@ -21,7 +21,7 @@ export class Form extends Component {
     };
   }
 
-  searchSong(val){  
+  searchSong(val){
     if(val){
       axios.get(`${server}/tracks`,{
         params:{
@@ -40,6 +40,9 @@ export class Form extends Component {
         });
       },(e)=>{
         console.log('error',e);
+        if (e.response.status == 401) {
+            window.location = window.location.pathname;
+        }
       });
     }else{
       this.setState({
@@ -82,7 +85,7 @@ export class Form extends Component {
       var data = res.data;
       console.log(data)
       axios.post(`${server}/playlists`,{
-      
+
         user:self.props.userid,
         name: document.getElementById('playlist').value,
         description: document.getElementById('desc').value,
@@ -114,14 +117,14 @@ export class Form extends Component {
       });
     },(e)=>{
       axios.post(`${server}/playlists`,{
-      
+
         user:self.props.userid,
         name: document.getElementById('playlist').value,
         description: document.getElementById('desc').value,
         tracks:song_info[0],
         artists:song_info[1],
         limit:50,
-        
+
       },
       {
         headers:{
@@ -134,6 +137,9 @@ export class Form extends Component {
       },(err)=>{
         console.log(self);
         console.log('error',err);
+        if (err.response.status == 401) {
+            window.location = window.location.pathname;
+        }
       });
     });
     };
@@ -164,6 +170,13 @@ export class Form extends Component {
                return <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this,i)}>x</ButtonRemove><span>{song.name}</span></Item>
              })}
             <Emoji emojiCallback={(val)=>{this.getEmojiString(val)}}/>
+<<<<<<< HEAD
+=======
+        {<Songs flag_cap = {this.state.song_list.length >= 5}songsArray = {this.state.songs} callback={(val)=>{this.updateSong(val)}}/>}
+          {this.state.song_list.map((song, i) => {
+            return <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this,i)}>x</ButtonRemove><span>{song.name}</span></Item>
+          })}
+>>>>>>> 732d45db9132cbe3b163b97008c18667ca30a6c7
             <ButtonCreate onClick={this.createPlaylist.bind(this)}>Create Playlist</ButtonCreate>
         </WrapperRow>
       </Wrapper>
@@ -209,5 +222,5 @@ const WrapperRow_Center = WrapperRow.extend`
 
 const Title = styled.h1`
   font-size: 3em;
-  text-align: center;  
+  text-align: center;
 `;
