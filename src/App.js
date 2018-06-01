@@ -68,7 +68,7 @@ class App extends Component {
       {!!this.state.access_token &&
           <Welcome>
             <h3>{this.state.display || this.state.id}</h3>
-            <logoutButton style={buttonStyles} onClick={this.logout.bind(this)}>Logout</logoutButton>
+            <LogoutButton style={buttonStyles} onClick={this.logout.bind(this)}>Logout</LogoutButton>
             <br/>
           </Welcome>
         }
@@ -105,7 +105,7 @@ const Welcome = styled.div`
   font-size: 1em;
 `;
 
-const logoutButton = Button.extend`
+const LogoutButton = Button.extend`
   float: right;
   font-size: 1em;
   padding: 0;

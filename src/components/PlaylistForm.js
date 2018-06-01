@@ -38,7 +38,8 @@ export class Form extends Component {
           'Authorization':`Bearer ${this.props.token}`
         }
       }).then((result)=>{
-        let songs = result.data.tracks;
+        console.log(result)
+        let songs = result.data.tracks || [];
         let select_list = [];
         songs.map(() => {
           select_list.push(false);
@@ -47,6 +48,7 @@ export class Form extends Component {
           'songs': songs,
           'song_select': select_list
         });
+        
       },(e)=>{
         console.log('error',e);
         if (e.response.status == 401) {
