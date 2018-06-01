@@ -117,11 +117,8 @@ const Emojibtn = styled.button`
   font-size: 1.7em;
   transition: all .3s;
 
-  &:hover {
-    transform: scale(1.7);
-  }
-
-  &:focus {
+  &:hover, &:active, &:focus {
+    transform: scale(1.5);
     box-shadow: transparent;
     outline: none;
   }
@@ -132,5 +129,5 @@ const EmojibtnSelect = Emojibtn.extend`
 `;
 
 const Template = styled.div`
-  height: 13em;
+  margin-top: 1em;
 `;

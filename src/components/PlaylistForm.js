@@ -16,13 +16,18 @@ export class Form extends Component {
     super(props);
     this.state = {
       song_list:[],
+      song_select: [],
       emoji_string:'',
+      searchString: '',
       success:false,
     };
   }
 
   searchSong(val){
     if(val){
+      this.setState({
+        searchString: val,
+      })
       axios.get(`${server}/tracks`,{
         params:{
           q:val,
@@ -34,9 +39,13 @@ export class Form extends Component {
         }
       }).then((result)=>{
         let songs = result.data.tracks;
+        let select_list = [];
+        songs.map(() => {
+          select_list.push(false);
+        })
         this.setState({
           'songs': songs,
-          'search': val.length
+          'song_select': select_list
         });
       },(e)=>{
         console.log('error',e);
@@ -47,15 +56,16 @@ export class Form extends Component {
     }else{
       this.setState({
         'songs':[],
-        'search':0
       });
     }
   }
 
   updateSong(val){
-    var song_l = this.state.song_list
+    var song_l = this.state.song_list;
     song_l.push(val);
-    this.setState({song_list:song_l});
+    this.setState({
+      song_list: song_l,
+    });
   }
 
   removeSong(id){
@@ -131,12 +141,8 @@ export class Form extends Component {
           'Authorization':`Bearer ${self.props.token}`
       }
       }).then((result)=>{
-        console.log(self);
-        console.log(result);
         self.setState({'success':true});
       },(err)=>{
-        console.log(self);
-        console.log('error',err);
         if (err.response.status == 401) {
             window.location = window.location.pathname;
         }
@@ -145,7 +151,6 @@ export class Form extends Component {
     };
 
   getEmojiString(val){
-    console.log(val);
     this.setState({'emoji_string':val});
   }
 
@@ -153,11 +158,11 @@ export class Form extends Component {
     this.setState({
       'song_list': [],
       'songs': [],
-      'search': ''
     })
   }
 
   render() {
+    let songList = this.state.song_list;
     return (
       <Wrapper>
         <WrapperRow>
@@ -165,10 +170,12 @@ export class Form extends Component {
             <Field id = 'playlist' required placeholder='Playlist Name'></Field>
             <Field id = 'desc' required placeholder='Description'></Field>
             <FieldDynamic id='song-search' required placeholder='Search a song!' func={(val)=>{this.searchSong(val)}}></FieldDynamic>
-            {<Songs flag_cap = {this.state.song_list.length >= 5}songsArray = {this.state.songs} callback={(val)=>{this.updateSong(val)}}/>}        
-             {this.state.song_list.map((song, i) => {
-               return <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this,i)}>x</ButtonRemove><span>{song.name}</span></Item>
-             })}
+            {<Songs searchString={this.state.searchString} flag_cap = {this.state.song_list.length >= 5} songsArray = {this.state.songs} callback={(val)=>{this.updateSong(val)}}/>}
+            <RemoveSongWrapper>
+              {this.state.song_list.map((song, i) => {
+                return <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this,i)}>x</ButtonRemove><span>{song.name}</span></Item>
+              })}
+            </RemoveSongWrapper>
             <Emoji emojiCallback={(val)=>{this.getEmojiString(val)}}/>
             <ButtonCreate onClick={this.createPlaylist.bind(this)}>Create Playlist</ButtonCreate>
         </WrapperRow>
@@ -181,7 +188,6 @@ const WrapperRow = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 0 4em;
 `;
 
 const Wrapper = styled.div`
@@ -190,13 +196,19 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 
+const RemoveSongWrapper = Wrapper.extend`
+  margin-top: 2em;
+`;
+
+
 const Item = styled.span`
   margin: .5em auto;
   padding-left: 3em;
 `;
 
 const ButtonCreate = Button.extend`
-  margin-top: 5em;
+  margin-top: 0;
+  margin-bottom: 0;
 `;
 
 const ButtonRemove = Button.extend`
@@ -207,13 +219,9 @@ const ButtonRemove = Button.extend`
   margin-top: 0;
 `;
 
-const WrapperRow_Center = WrapperRow.extend`
-  justify-content: center;
-  margin: 0;
-  margin-top: -7em;
-`
 
 const Title = styled.h1`
   font-size: 3em;
   text-align: center;
+  margin-bottom: 0;
 `;
