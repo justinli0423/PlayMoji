@@ -1,22 +1,26 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import Colors from './data/Colors';
 
-export class FieldDynamic extends Component {
-  render() {
-    return (
-      <Input id={this.props.id} placeholder = {this.props.placeholder} type = "text" name = {this.props.name} onChange={()=>this.props.func(document.getElementById(this.props.id).value)}/>        
-    );
-  }
+const FieldDynamic = ({ id, placeholder, func }) => (
+  <Input id={id} placeholder={placeholder} type="text" onChange={() => func(document.getElementById(id).value)} />
+);
+
+const Field = ({ id, placeholder }) => (
+  <Input id={id} placeholder={placeholder} />
+);
+
+FieldDynamic.propTypes = {
+  id: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
+  func: PropTypes.func.isRequired,
 };
 
-export class Field extends Component {
-  render() {
-    return (
-      <Input id={this.props.id} placeholder = {this.props.placeholder} type = "text" name = {this.props.name}/>        
-    );
-  }
+Field.propTypes = {
+  id: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
 };
 
 const Input = styled.input`
@@ -36,3 +40,5 @@ const Input = styled.input`
       border-bottom: 2px solid ${Colors.black};
     }
 `;
+
+export { FieldDynamic, Field };

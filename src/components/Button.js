@@ -1,15 +1,17 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Colors from './data/Colors';
 
-export class Login extends Component {
-  render() {
-    const spotifyLink = `https://accounts.spotify.com/authorize?client_id=c9560e7e9d404ceba59a76165a446b1a&redirect_uri=${window.location.origin}&scope=playlist-modify-public&response_type=token`;
-    return (
-      <Button href={spotifyLink}>{this.props.label}</Button>
-    );
-  }
+const spotifyLink = `https://accounts.spotify.com/authorize?client_id=c9560e7e9d404ceba59a76165a446b1a&redirect_uri=${window.location.origin}&scope=playlist-modify-public&response_type=token`;
+
+const Login = ({ label }) => (
+  <Button href={spotifyLink}>{label}</Button>
+);
+
+Login.propTypes = {
+  label: PropTypes.string.isRequired,
 };
 
 const Button = styled.a`
@@ -31,4 +33,4 @@ const Button = styled.a`
     }
 `;
 
-export {Button};
+export { Button, Login };

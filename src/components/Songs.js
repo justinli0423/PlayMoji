@@ -1,37 +1,55 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-
+import PropTypes from 'prop-types';
 import Colors from './data/Colors';
 
-export class Songs extends Component {
+export default class Songs extends Component {
+  static propTypes = {
+    callback: PropTypes.func.isRequired,
+    songsArray: PropTypes.arrayOf(PropTypes.object),
+    flag_cap: PropTypes.bool.isRequired,
+    searchString: PropTypes.arrayOf(PropTypes.string),
+  };
+
+  static defaultProps = {
+    songsArray: [],
+    searchString: '',
+  };
+
   register(song) {
     this.props.callback(song);
   }
 
   render() {
     const songs = this.props.songsArray || [];
-    console.log(this.props.searchString)
 
     return (
-      !this.props.flag_cap && <Wrapper searchString={this.props.searchString}>
-        <List_top>{songs.length != 0 && songs.slice(0, songs.length / 2).map((song, i) => <Container><Button onClick={this.register.bind(this, song)} src={song.imageUrl} /><Content id={i}>{song.name.length > 10 ? `${song.name.substring(0, 10)}...` : song.name}</Content></Container>)}
-        </List_top>
+      !this.props.flag_cap &&
+      <Wrapper searchString={this.props.searchString}>
+        <ListTop>{songs.length !== 0 && songs.slice(0, songs.length / 2).map((song, i) =>
+          (
+            <Container>
+              <Button onClick={this.register.bind(this, song)} src={song.imageUrl} />
+              <Content id={i}>{song.name.length > 10 ? `${song.name.substring(0, 10)}...` : song.name}</Content>
+            </Container>
+          ))}
+        </ListTop>
         <List>
-          {songs.slice(songs.length / 2, songs.length).map((song, i) => <Container><Button onClick={this.register.bind(this, song, i)} src={song.imageUrl} /><Content id={i}>{song.name.length > 10 ? `${song.name.substring(0, 10)}...` : song.name}</Content></Container>)}
+          {songs.slice(songs.length / 2, songs.length).map((song, i) =>
+            (
+              <Container>
+                <Button onClick={this.register.bind(this, song, i)} src={song.imageUrl} />
+                <Content id={i}>{song.name.length > 10 ? `${song.name.substring(0, 10)}...` : song.name}</Content>
+              </Container>
+            ))}
         </List>
       </Wrapper>
     );
   }
 }
 
-const Title = styled.h1`
-  text-align: center;
-  width: 100%;
-  margin-bottom: 3em;
-`;
-
 const Wrapper = styled.div`
-  display: ${props => props.searchString.length < 1 ? 'none' : 'default'};
+  display: ${props => (props.searchString.length < 1 ? 'none' : 'default')};
 `;
 
 const List = styled.div`
@@ -41,7 +59,7 @@ const List = styled.div`
     flex-shrink: 1;
 `;
 
-const List_top = List.extend`
+const ListTop = List.extend`
   margin-top: 2em;
 `;
 

@@ -1,58 +1,59 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import {instanceOf} from 'prop-types';
-import {withCookies,Cookies} from 'react-cookie';
-import {Login} from './components/Button';
-import {Form} from './components/PlaylistForm';
-import {Button} from './components/Button';
+import { instanceOf } from 'prop-types';
+import { withCookies, Cookies } from 'react-cookie';
 
-import Colors from './components/data/Colors';
+import Form from './components/PlaylistForm';
+import { Login } from './components/Button';
+
+const buttonStyles = {
+  float: 'right',
+};
 
 class App extends Component {
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired,
   };
 
-  constructor(props){
+  constructor(props) {
     super(props);
 
-    const {cookies} = this.props;
+    const { cookies } = this.props;
     this.setState({
-      access_token:cookies.get('access_token') || null
-    })
+      accessToken: cookies.get('access_token') || null,
+    });
   }
 
-  componentWillMount(){
+  componentWillMount() {
     const { cookies } = this.props;
+    const params = new URLSearchParams(window.location.hash.slice(1));
+    let accessToken = params.get('access_token');
 
-    var params = new URLSearchParams(window.location.hash.slice(1,));
-
-    var access_token = params.get('access_token');
-
-    if(access_token){
-      cookies.set('access_token',access_token);
+    if (accessToken) {
+      cookies.set('access_token', accessToken);
       window.location = window.location.pathname;
     }
-    access_token = cookies.get('access_token');
-    this.setState({'access_token':access_token});
 
-    axios.get('https://api.spotify.com/v1/me',{headers:{'Authorization':`Bearer ${access_token}`}}).then((data)=>{
-      this.setState({'id': data.data.id, 'display': data.data.display_name});
-    },(e)=>{
+    accessToken = cookies.get('access_token');
+    this.setState({ accessToken });
+
+    axios.get('https://api.spotify.com/v1/me', { headers: { Authorization: `Bearer ${accessToken}` } }).then((data) => {
+      this.setState({ id: data.data.id, display: data.data.display_name });
+    }, (e) => {
       console.log(e);
-      if(e.response.status == 401 && access_token != null){
-        console.log('Token has expired, logging out')
-        cookies.remove('access_token')
+      if (e.response.status === 401 && accessToken != null) {
+        console.log('Token has expired, logging out');
+        cookies.remove('access_token');
         window.location = window.location.pathname;
       }
-    })
+    });
   }
 
-  logout(){
-    const {cookies} = this.props
+  logout() {
+    const { cookies } = this.props;
     console.log('Logging out');
-    this.setState({'id': undefined, 'display': undefined});
+    this.setState({ id: undefined, display: undefined });
     cookies.remove('access_token');
     window.location = window.location.pathname;
   }
@@ -62,15 +63,15 @@ class App extends Component {
       <Container>
         <WrapperFlex>
           <Title>playmoji</Title>
-          {(!this.state.access_token) && <Login label = {"Sign in"}></Login>}
-          {!!this.state.access_token && <Form token={this.state.access_token} userid={this.state.id}></Form>}
+          {!this.state.accessToken && <Login label="Sign in" />}
+          {!!this.state.accessToken && <Form token={this.state.accessToken} userid={this.state.id} />}
         </WrapperFlex>
-      {!!this.state.access_token &&
-          <Welcome>
-            <h3>{this.state.display || this.state.id}</h3>
-            <logoutButton style={buttonStyles} onClick={this.logout.bind(this)}>Logout</logoutButton>
-            <br/>
-          </Welcome>
+        {!!this.state.accessToken &&
+        <Welcome>
+          <h3>{this.state.display || this.state.id}</h3>
+          <logoutButton style={buttonStyles} onClick={this.logout.bind(this)}>Logout</logoutButton>
+          <br />
+        </Welcome>
         }
       </Container>
     );
@@ -104,23 +105,6 @@ const Welcome = styled.div`
   margin: 0;
   font-size: 1em;
 `;
-
-const logoutButton = Button.extend`
-  float: right;
-  font-size: 1em;
-  padding: 0;
-  text-align: right;
-  border-radius: 0;
-  display: block;
-  text-decoration: none;
-  &:hover, &:active {
-      cursor: default;
-    }
-`;
-
-var buttonStyles = {
-    float: "right"
-};
 
 const Container = styled.div`
   display: block;
