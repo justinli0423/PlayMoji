@@ -5,7 +5,7 @@ import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 
 import Form from './components/PlaylistForm';
-import { Login } from './components/Button';
+import { Login, Button } from './components/Button';
 
 const buttonStyles = {
   float: 'right',
@@ -53,8 +53,8 @@ class App extends Component {
   logout() {
     const { cookies } = this.props;
     console.log('Logging out');
-    this.setState({ id: undefined, display: undefined });
     cookies.remove('access_token');
+    this.setState({ id: undefined, display: undefined });
     window.location = window.location.pathname;
   }
 
@@ -68,8 +68,8 @@ class App extends Component {
         </WrapperFlex>
         {!!this.state.accessToken &&
         <Welcome>
-          <h3>{this.state.display || this.state.id}</h3>
-          <logoutButton style={buttonStyles} onClick={this.logout.bind(this)}>Logout</logoutButton>
+          <UserName>{this.state.display || this.state.id}</UserName>
+          <Button onClick={this.logout.bind(this)}>Logout</Button>
           <br />
         </Welcome>
         }
@@ -81,6 +81,12 @@ class App extends Component {
 const Title = styled.h1`
   text-align: center;
   font-size: 5em;
+`;
+
+const UserName = styled.h1`
+  text-align: center;
+  font-size: 2em;
+  margin-top: 20pt;
 `;
 
 const WrapperFlex = styled.div`
