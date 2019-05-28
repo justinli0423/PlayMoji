@@ -38,16 +38,17 @@ class App extends Component {
     accessToken = cookies.get('access_token');
     this.setState({ accessToken });
 
-    axios.get('https://api.spotify.com/v1/me', { headers: { Authorization: `Bearer ${accessToken}` } }).then((data) => {
-      this.setState({ id: data.data.id, display: data.data.display_name });
-    }, (e) => {
-      console.log(e);
-      if (e.response.status === 401 && accessToken != null) {
-        console.log('Token has expired, logging out');
-        cookies.remove('access_token');
-        window.location = window.location.pathname;
-      }
-    });
+    axios.get('https://api.spotify.com/v1/me', { headers: { Authorization: `Bearer ${accessToken}` } })
+      .then((data) => {
+        this.setState({ id: data.data.id, display: data.data.display_name });
+      }, (e) => {
+      // console.log(e);
+        if (e.response.status === 401 && accessToken != null) {
+          console.log('Token has expired, logging out');
+          cookies.remove('access_token');
+          window.location = window.location.pathname;
+        }
+      });
   }
 
   logout() {

@@ -7,6 +7,7 @@ import { FieldDynamic, Field } from './FieldInput';
 import { Button } from './Button';
 import Songs from './Songs';
 import Emoji from './emoji';
+import Success from './Success';
 
 const server = 'https://spotify-playlist-generator-api.herokuapp.com';
 const emojiapi = 'https://emojistoemotions.herokuapp.com/emojicollection/';
@@ -94,6 +95,7 @@ export default class Form extends Component {
         console.log('error', err);
       });
     }, () => {
+      // seperate call incase first one fails - in error callback
       axios.post(`${server}/playlists`, {
         user: self.props.userid,
         name: document.getElementById('playlist').value,
@@ -109,6 +111,7 @@ export default class Form extends Component {
         self.setState({ success: true });
       }, (err) => {
         if (err.response.status === 401) {
+          // refresh page to auto log out
           window.location = window.location.pathname;
         }
       });
@@ -150,6 +153,7 @@ export default class Form extends Component {
       }, (e) => {
         console.log('error', e);
         if (e.response.status === 401) {
+          // refresh page to auto log out
           window.location = window.location.pathname;
         }
       });
@@ -164,7 +168,7 @@ export default class Form extends Component {
     return (
       <Wrapper>
         <WrapperRow>
-          {this.state.success && <Title>Successfully Created Playlist </Title>}
+          {this.state.success && <Success />}
           <Field id="playlist" required placeholder="Playlist Name" />
           <Field id="desc" required placeholder="Description" />
           <FieldDynamic id="song-search" required placeholder="Search a song!" func={(val) => { this.searchSong(val); }} />
