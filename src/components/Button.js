@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import Colors from './data/Colors';
 
-const spotifyLink = `https://accounts.spotify.com/authorize?client_id=c9560e7e9d404ceba59a76165a446b1a&redirect_uri=${window.location.origin}&scope=playlist-modify-public&response_type=token`;
+const spotifyLink = `https://accounts.spotify.com/authorize?show_dialog=true&client_id=c9560e7e9d404ceba59a76165a446b1a&redirect_uri=${window.location.origin}&scope=playlist-modify-public&response_type=token`;
 
 const Login = ({ label }) => (
   <Button href={spotifyLink}>{label}</Button>
