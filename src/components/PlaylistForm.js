@@ -52,7 +52,7 @@ export default class Form extends Component {
     // Turns list into comma separated string
     const ret = ['', '']; // 0 - trackId, 1 - artistIds
     const commaSeperatedString = this.state.song_list;
-    commaSeperatedString.map((song) => {
+    commaSeperatedString.forEach((song) => {
       ret[0] += `${song.trackId},`;
       ret[1] += `${song.artistId},`;
     });
@@ -60,10 +60,12 @@ export default class Form extends Component {
     ret[1] = ret[1].slice(0, -1);
     return ret;
   }
+
   createPlaylist() {
     const self = this;
     const songInfo = self.formatListToString();
     axios.get(`${emojiapi}${this.state.emoji_string}`).then((res) => {
+      // returns formatted object for spotify api
       const { data } = res;
       axios.post(
         `${server}/playlists`, {
@@ -95,7 +97,7 @@ export default class Form extends Component {
         console.log('error', err);
       });
     }, () => {
-      // seperate call incase first one fails - in error callback
+      // seperate API call if emojis were not picked - in error callback
       axios.post(`${server}/playlists`, {
         user: self.props.userid,
         name: document.getElementById('playlist').value,
@@ -144,7 +146,7 @@ export default class Form extends Component {
       }).then((result) => {
         const songs = result.data.tracks || [];
         const selectSongList = [];
-        songs.map(() => {
+        songs.forEach(() => {
           selectSongList.push(false);
         });
         this.setState({
@@ -172,7 +174,14 @@ export default class Form extends Component {
           <Field id="playlist" required placeholder="Playlist Name" />
           <Field id="desc" required placeholder="Description" />
           <FieldDynamic id="song-search" required placeholder="Search a song!" func={(val) => { this.searchSong(val); }} />
-          {<Songs searchString={this.state.searchString} flag_cap={this.state.song_list.length >= 5} songsArray={this.state.songs} callback={(val) => { this.updateSong(val); }} />}
+          {
+            <Songs
+              searchString={this.state.searchString}
+              flag_cap={this.state.song_list.length >= 5}
+              songsArray={this.state.songs}
+              callback={(val) => { this.updateSong(val); }}
+            />
+          }
           <RemoveSongWrapper>
             {this.state.song_list.map((song, i) => <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this, i)}>x</ButtonRemove><span>{song.name}</span></Item>)}
           </RemoveSongWrapper>
@@ -200,7 +209,6 @@ const RemoveSongWrapper = Wrapper.extend`
   margin-top: 2em;
 `;
 
-
 const Item = styled.span`
   margin: .5em auto;
   padding-left: 3em;
@@ -215,11 +223,4 @@ const ButtonRemove = Button.extend`
   padding: 0 .2em;
   display: inline;
   margin: .5em;
-`;
-
-
-const Title = styled.h1`
-  font-size: 3em;
-  text-align: center;
-  margin-bottom: 0;
 `;

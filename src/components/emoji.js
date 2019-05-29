@@ -46,7 +46,7 @@ export default class Emoji extends Component {
     const currentEmojis = this.state.emojiString;
     const tempArr = this.state.emojiSelect;
     tempArr[id] = !tempArr[id];
-    currentEmojis.map((item, i) => {
+    currentEmojis.forEach((item, i) => {
       if (_.isEqual(emoji, item)) {
         check = i;
       }

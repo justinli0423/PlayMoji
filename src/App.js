@@ -7,10 +7,6 @@ import { withCookies, Cookies } from 'react-cookie';
 import Form from './components/PlaylistForm';
 import { Login, Button } from './components/Button';
 
-const buttonStyles = {
-  float: 'right',
-};
-
 class App extends Component {
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired,

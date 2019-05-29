@@ -8,7 +8,7 @@ export default class Songs extends Component {
     callback: PropTypes.func.isRequired,
     songsArray: PropTypes.arrayOf(PropTypes.object),
     flag_cap: PropTypes.bool.isRequired,
-    searchString: PropTypes.arrayOf(PropTypes.string),
+    searchString: PropTypes.string,
   };
 
   static defaultProps = {
@@ -26,6 +26,7 @@ export default class Songs extends Component {
     return (
       !this.props.flag_cap &&
       <Wrapper searchString={this.props.searchString}>
+        {/* first half of list */}
         <ListTop>{songs.length !== 0 && songs.slice(0, songs.length / 2).map((song, i) =>
           (
             <Container>
@@ -35,6 +36,7 @@ export default class Songs extends Component {
           ))}
         </ListTop>
         <List>
+          {/* 2nd half of list */}
           {songs.slice(songs.length / 2, songs.length).map((song, i) =>
             (
               <Container>
