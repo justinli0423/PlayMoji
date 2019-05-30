@@ -5,7 +5,7 @@ import Colors from './data/Colors';
 
 export default class Songs extends Component {
   static propTypes = {
-    callback: PropTypes.func.isRequired,
+    selectSong: PropTypes.func.isRequired,
     songsArray: PropTypes.arrayOf(PropTypes.object),
     flag_cap: PropTypes.bool.isRequired,
     searchString: PropTypes.string,
@@ -17,7 +17,7 @@ export default class Songs extends Component {
   };
 
   register(song) {
-    this.props.callback(song);
+    this.props.selectSong(song);
   }
 
   render() {
@@ -55,10 +55,10 @@ const Wrapper = styled.div`
 `;
 
 const List = styled.div`
-    margin-top: 5em;
-    display: flex;
-    justify-content: space-evenly;
-    flex-shrink: 1;
+  margin-top: 5em;
+  display: flex;
+  justify-content: space-evenly;
+  flex-shrink: 1;
 `;
 
 const ListTop = List.extend`
@@ -66,26 +66,26 @@ const ListTop = List.extend`
 `;
 
 const Content = styled.div`
-    display: block;
-    font-size: 1.4em;
-    text-align: center;
-    margin-top: 4px;
+  display: block;
+  font-size: 1.4em;
+  text-align: center;
+  margin-top: 4px;
 `;
 
 const Container = styled.div`
-    padding: .5em;
-    transition: all .3s;
-    margin-right: 2rem;
-    box-shadow: 2px 2px 5px ${Colors.grey};
-    &:hover {
-      transform: scale(1.2);
-      box-shadow: 7px 7px 5px ${Colors.grey};
-    }
+  padding: .5em;
+  transition: all .3s;
+  margin-right: 2rem;
+  box-shadow: 2px 2px 5px ${Colors.grey};
+  &:hover {
+    transform: scale(1.2);
+    box-shadow: 7px 7px 5px ${Colors.grey};
+  }
 `;
 
 const Button = styled.img`
-    width: 10em;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+  width: 10em;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 `;

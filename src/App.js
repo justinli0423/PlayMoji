@@ -14,20 +14,19 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-
     const { cookies } = this.props;
-    this.setState({
-      accessToken: cookies.get('access_token') || null,
-    });
+    this.state = { accessToken: cookies.get('access_token') || null };
   }
 
   componentWillMount() {
     const { cookies } = this.props;
+    // query param of log-in url for access token
     const params = new URLSearchParams(window.location.hash.slice(1));
     let accessToken = params.get('access_token');
 
     if (accessToken) {
       cookies.set('access_token', accessToken);
+      // cannot use reload here
       window.location = window.location.pathname;
     }
 
@@ -42,7 +41,7 @@ class App extends Component {
         if (e.response.status === 401 && accessToken != null) {
           console.log('Token has expired, logging out');
           cookies.remove('access_token');
-          window.location = window.location.pathname;
+          window.location.reload();
         }
       });
   }
@@ -52,7 +51,7 @@ class App extends Component {
     console.log('Logging out');
     cookies.remove('access_token');
     this.setState({ id: undefined, display: undefined });
-    window.location = window.location.pathname;
+    window.location.reload();
   }
 
   render() {
@@ -61,9 +60,9 @@ class App extends Component {
         <WrapperFlex>
           <Title>playmoji</Title>
           {!this.state.accessToken && <Login label="Sign in" />}
-          {!!this.state.accessToken && <Form token={this.state.accessToken} userid={this.state.id} />}
+          {this.state.accessToken && <Form token={this.state.accessToken} userid={this.state.id} />}
         </WrapperFlex>
-        {!!this.state.accessToken &&
+        {this.state.accessToken &&
         <Welcome>
           <UserName>{this.state.display || this.state.id}</UserName>
           <Button onClick={this.logout.bind(this)}>Logout</Button>

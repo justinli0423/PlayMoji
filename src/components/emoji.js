@@ -8,7 +8,7 @@ const server = 'https://emojistoemotions.herokuapp.com/emojicollection';
 
 export default class Emoji extends Component {
   static propTypes = {
-    emojiCallback: PropTypes.func.isRequired,
+    getEmojiString: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -31,6 +31,7 @@ export default class Emoji extends Component {
     axios.get(`${server}`).then((result) => {
       const emojis = result.data;
       const emojiSelected = [];
+      // start each emoji as non-selected
       emojis.map(() => emojiSelected.push(false));
       this.setState({
         emojiList: emojis,
@@ -43,24 +44,29 @@ export default class Emoji extends Component {
 
   addEmoji(emoji, id) {
     let check = -1;
-    const currentEmojis = this.state.emojiString;
-    const tempArr = this.state.emojiSelect;
-    tempArr[id] = !tempArr[id];
-    currentEmojis.forEach((item, i) => {
+    const {
+      emojiSelect,
+      emojiString,
+    } = this.state;
+    const { getEmojiString } = this.props;
+    // emojiString: list of emojis
+    // emojiSelect: selected Emojis - set that index to true
+    emojiSelect[id] = !emojiSelect[id];
+    emojiString.forEach((item, i) => {
       if (_.isEqual(emoji, item)) {
         check = i;
       }
     });
     if (check !== -1) {
-      currentEmojis.splice(check, 1);
+      emojiString.splice(check, 1);
     } else {
-      currentEmojis.push(emoji);
+      emojiString.push(emoji);
     }
     this.setState({
-      emojiSelect: tempArr,
-      emojiString: currentEmojis,
+      emojiSelect,
+      emojiString,
     });
-    this.props.emojiCallback(this.formatEmojiString(this.state.emojiString));
+    getEmojiString(this.formatEmojiString(this.state.emojiString));
   }
 
   formatEmojiString(emojiList) {
@@ -74,6 +80,7 @@ export default class Emoji extends Component {
 
   render() {
     const emojis = this.state.emojiList;
+    // create 2 lists to display
     const emojisListOne = emojis.slice(0, emojis.length / 2);
     const emojisListTwo = emojis.slice(emojis.length / 2, emojis.length);
 

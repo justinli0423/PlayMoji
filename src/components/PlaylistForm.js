@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -51,25 +52,29 @@ export default class Form extends Component {
   formatListToString() {
     // Turns list into comma separated string
     const ret = ['', '']; // 0 - trackId, 1 - artistIds
-    const commaSeperatedString = this.state.song_list;
-    commaSeperatedString.forEach((song) => {
+    const { song_list } = this.state;
+    song_list.forEach((song) => {
       ret[0] += `${song.trackId},`;
       ret[1] += `${song.artistId},`;
     });
+    // removing the last comma
     ret[0] = ret[0].slice(0, -1);
     ret[1] = ret[1].slice(0, -1);
     return ret;
   }
 
   createPlaylist() {
-    const self = this;
-    const songInfo = self.formatListToString();
+    const {
+      userid,
+      token,
+    } = this.props;
+    const songInfo = this.formatListToString();
     axios.get(`${emojiapi}${this.state.emoji_string}`).then((res) => {
       // returns formatted object for spotify api
       const { data } = res;
       axios.post(
         `${server}/playlists`, {
-          user: self.props.userid,
+          user: userid,
           name: document.getElementById('playlist').value,
           description: document.getElementById('desc').value,
           tracks: songInfo[0],
@@ -85,12 +90,12 @@ export default class Form extends Component {
         },
         {
           headers: {
-            Authorization: `Bearer ${self.props.token}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       ).then(() => {
-        self.setState({ success: true });
-        self.setState({
+        this.setState({ success: true });
+        this.setState({
           song_list: [],
         });
       }, (err) => {
@@ -99,7 +104,7 @@ export default class Form extends Component {
     }, () => {
       // seperate API call if emojis were not picked - in error callback
       axios.post(`${server}/playlists`, {
-        user: self.props.userid,
+        user: userid,
         name: document.getElementById('playlist').value,
         description: document.getElementById('desc').value,
         tracks: songInfo[0],
@@ -107,26 +112,22 @@ export default class Form extends Component {
         limit: 50,
       }, {
         headers: {
-          Authorization: `Bearer ${self.props.token}`,
+          Authorization: `Bearer ${token}`,
         },
       }).then(() => {
-        self.setState({ success: true });
+        this.setState({ success: true });
       }, (err) => {
         if (err.response.status === 401) {
-          // refresh page to auto log out
-          window.location = window.location.pathname;
+          window.location.reload();
         }
       });
     });
   }
 
-
   updateSong(val) {
-    const songList = this.state.song_list;
-    songList.push(val);
-    this.setState({
-      song_list: songList,
-    });
+    const { song_list } = this.state;
+    song_list.push(val);
+    this.setState({ song_list });
   }
 
   searchSong(val) {
@@ -156,10 +157,11 @@ export default class Form extends Component {
         console.log('error', e);
         if (e.response.status === 401) {
           // refresh page to auto log out
-          window.location = window.location.pathname;
+          window.location.reload();
         }
       });
     } else {
+      // set the return query to empty array (errors in function due to array undefined)
       this.setState({
         songs: [],
       });
@@ -173,19 +175,19 @@ export default class Form extends Component {
           {this.state.success && <Success />}
           <Field id="playlist" required placeholder="Playlist Name" />
           <Field id="desc" required placeholder="Description" />
-          <FieldDynamic id="song-search" required placeholder="Search a song!" func={(val) => { this.searchSong(val); }} />
+          <FieldDynamic id="song-search" required placeholder="Search a song!" searchSong={(val) => { this.searchSong(val); }} />
           {
             <Songs
               searchString={this.state.searchString}
               flag_cap={this.state.song_list.length >= 5}
               songsArray={this.state.songs}
-              callback={(val) => { this.updateSong(val); }}
+              selectSong={(val) => { this.updateSong(val); }}
             />
           }
           <RemoveSongWrapper>
             {this.state.song_list.map((song, i) => <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this, i)}>x</ButtonRemove><span>{song.name}</span></Item>)}
           </RemoveSongWrapper>
-          <Emoji emojiCallback={(val) => { this.getEmojiString(val); }} />
+          <Emoji getEmojiString={(val) => { this.getEmojiString(val); }} />
           <ButtonCreate onClick={this.createPlaylist.bind(this)}>Create Playlist</ButtonCreate>
         </WrapperRow>
       </Wrapper>
