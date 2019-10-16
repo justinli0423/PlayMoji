@@ -3,9 +3,11 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
+import { connect } from 'react-redux';
 
 import Form from './components/PlaylistForm';
 import { Login, Button } from './components/Button';
+import { setAccessToken } from './redux/actions';
 
 class App extends Component {
   static propTypes = {
@@ -28,10 +30,13 @@ class App extends Component {
       cookies.set('access_token', accessToken);
       // cannot use reload here
       window.location = window.location.pathname;
+      // set the accessToken to global store
+
     }
 
     accessToken = cookies.get('access_token');
     this.setState({ accessToken });
+    this.handleAccessToken();
 
     axios.get('https://api.spotify.com/v1/me', { headers: { Authorization: `Bearer ${accessToken}` } })
       .then((data) => {
@@ -50,8 +55,13 @@ class App extends Component {
     const { cookies } = this.props;
     console.log('Logging out');
     cookies.remove('access_token');
-    this.setState({ id: undefined, display: undefined });
+    this.setState({ id: undefined, display: undefined, accessToken: '' });
     window.location.reload();
+  }
+
+  handleAccessToken = () => {
+    const { accessToken } = this.state;
+    this.props.setAccessToken(accessToken);
   }
 
   render() {
@@ -114,4 +124,4 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-export default withCookies(App);
+export default connect(null, { setAccessToken })(withCookies(App));
