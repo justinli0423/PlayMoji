@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Colors from './data/Colors';
 
-export default class Songs extends Component {
+class Songs extends Component {
   static propTypes = {
     selectSong: PropTypes.func.isRequired,
     songsArray: PropTypes.arrayOf(PropTypes.object),
@@ -89,3 +90,5 @@ const Button = styled.img`
   margin-left: auto;
   margin-right: auto;
 `;
+
+export default Songs;

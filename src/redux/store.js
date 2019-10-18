@@ -4,14 +4,23 @@ import { createStore } from 'redux';
 
 const initialStates = {
     accessToken: '',
-    songs: {},
-    emojis: {},
+    userId: '',
+    songs: [],
+    emojis: '',
 
 }
 
 const reducers = (state = initialStates, action) => {
     switch(action.type) {
+        case 'USER_ID': {
+            const { userId } = action.payload;
+            return {
+                ...state,
+                userId
+            }
+        }
         case 'LOGIN_TOKEN': {
+            console.log(`Setting AccessToken: ${action.payload.accessToken}`);
             const { accessToken } = action.payload;
             return {
                 ...state,
@@ -22,7 +31,14 @@ const reducers = (state = initialStates, action) => {
             const { songs } = action.payload;
             return {
                 ...state,
-                songs,
+                songs
+            }
+        }
+        case 'UPDATE_EMOJIS': {
+            const { emojis } = action.payload;
+            return {
+                ...state,
+                emojis
             }
         }
         default:

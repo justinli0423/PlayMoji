@@ -3,44 +3,26 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import { FieldDynamic, Field } from './FieldInput';
 import { Button } from './Button';
 import Songs from './Songs';
 import Emoji from './emoji';
 import Success from './Success';
+import { getAccessToken, getUserId, getEmojis } from '../redux/selectors';
 
 const server = 'https://spotify-playlist-generator-api.herokuapp.com';
 const emojiapi = 'https://emojistoemotions.herokuapp.com/emojicollection/';
 
-export default class Form extends Component {
-  static propTypes = {
-    token: PropTypes.string,
-  }
-
-  static defaultProps = {
-    token: '',
-  }
-
+class Form extends Component {
   constructor(props) {
     super(props);
     this.state = {
       song_list: [],
-      emoji_string: '',
       searchString: '',
       success: false,
     };
-  }
-
-  componentWillMount() {
-    this.setState({
-      song_list: [],
-      songs: [],
-    });
-  }
-
-  getEmojiString(val) {
-    this.setState({ emoji_string: val });
   }
 
   removeSong(id) {
@@ -65,16 +47,18 @@ export default class Form extends Component {
 
   createPlaylist() {
     const {
-      userid,
-      token,
+      userId,
+      accessToken,
+      emojiString
     } = this.props;
     const songInfo = this.formatListToString();
-    axios.get(`${emojiapi}${this.state.emoji_string}`).then((res) => {
+    axios.get(`${emojiapi}${emojiString}`).then((res) => {
       // returns formatted object for spotify api
+      // TO FIX ON API SIDE: EMOJIS ARE NOT PARSED CORRECTLY - SPOTIFY REJECTS BELOW SOMETIMES
       const { data } = res;
       axios.post(
         `${server}/playlists`, {
-          user: userid,
+          user: userId,
           name: document.getElementById('playlist').value,
           description: document.getElementById('desc').value,
           tracks: songInfo[0],
@@ -90,7 +74,7 @@ export default class Form extends Component {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         },
       ).then(() => {
@@ -104,7 +88,7 @@ export default class Form extends Component {
     }, () => {
       // seperate API call if emojis were not picked - in error callback
       axios.post(`${server}/playlists`, {
-        user: userid,
+        user: userId,
         name: document.getElementById('playlist').value,
         description: document.getElementById('desc').value,
         tracks: songInfo[0],
@@ -112,7 +96,7 @@ export default class Form extends Component {
         limit: 50,
       }, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }).then(() => {
         this.setState({ success: true });
@@ -142,7 +126,7 @@ export default class Form extends Component {
           limit: 10,
         },
         headers: {
-          Authorization: `Bearer ${this.props.token}`,
+          Authorization: `Bearer ${this.props.accessToken}`,
         },
       }).then((result) => {
         const songs = result.data.tracks || [];
@@ -169,30 +153,38 @@ export default class Form extends Component {
   }
 
   render() {
+    const { success, searchString, song_list, songs } = this.state;
     return (
       <Wrapper>
         <WrapperRow>
-          {this.state.success && <Success />}
+          {success && <Success />}
           <Field id="playlist" required placeholder="Playlist Name" />
           <Field id="desc" required placeholder="Description" />
           <FieldDynamic id="song-search" required placeholder="Search a song!" searchSong={(val) => { this.searchSong(val); }} />
           {
             <Songs
-              searchString={this.state.searchString}
-              flag_cap={this.state.song_list.length >= 5}
-              songsArray={this.state.songs}
+              searchString={searchString}
+              flag_cap={song_list.length >= 5}
+              songsArray={songs}
               selectSong={(val) => { this.updateSong(val); }}
             />
           }
           <RemoveSongWrapper>
-            {this.state.song_list.map((song, i) => <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this, i)}>x</ButtonRemove><span>{song.name}</span></Item>)}
+            {song_list.map((song, i) => <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this, i)}>x</ButtonRemove><span>{song.name}</span></Item>)}
           </RemoveSongWrapper>
-          <Emoji getEmojiString={(val) => { this.getEmojiString(val); }} />
+          <Emoji/>
           <ButtonCreate onClick={this.createPlaylist.bind(this)}>Create Playlist</ButtonCreate>
         </WrapperRow>
       </Wrapper>
     );
   }
+}
+
+const mapStateToProps = state => {
+  const accessToken = getAccessToken(state);
+  const userId = getUserId(state);
+  const emojiString = getEmojis(state);
+  return { accessToken, userId, emojiString };
 }
 
 const WrapperRow = styled.div`
@@ -226,3 +218,5 @@ const ButtonRemove = Button.extend`
   display: inline;
   margin: .5em;
 `;
+
+export default connect(mapStateToProps)(Form);

@@ -5,9 +5,23 @@ export const setAccessToken = accessToken => ({
     }
 });
 
+export const setUserId = userId => ({
+    type: 'USER_ID',
+    payload: {
+        userId
+    }
+})
+
 export const updateSongList = songs => ({
     type: 'UPDATE_SONGS',
     payload: {
         songs
     }
 });
+
+export const updateEmojiList = emojis => ({
+    type: 'UPDATE_EMOJIS',
+    payload: {
+        emojis
+    }
+})

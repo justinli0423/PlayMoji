@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import Form from './components/PlaylistForm';
 import { Login, Button } from './components/Button';
-import { setAccessToken } from './redux/actions';
+import { setAccessToken, setUserId } from './redux/actions';
 
 class App extends Component {
   static propTypes = {
@@ -41,6 +41,7 @@ class App extends Component {
     axios.get('https://api.spotify.com/v1/me', { headers: { Authorization: `Bearer ${accessToken}` } })
       .then((data) => {
         this.setState({ id: data.data.id, display: data.data.display_name });
+        this.handleUserId();
       }, (e) => {
       // console.log(e);
         if (e.response.status === 401 && accessToken != null) {
@@ -56,6 +57,8 @@ class App extends Component {
     console.log('Logging out');
     cookies.remove('access_token');
     this.setState({ id: undefined, display: undefined, accessToken: '' });
+    this.handleAccessToken();
+    this.handleUserId();
     window.location.reload();
   }
 
@@ -64,17 +67,23 @@ class App extends Component {
     this.props.setAccessToken(accessToken);
   }
 
+  handleUserId = () => {
+    const { id } = this.state;
+    this.props.setUserId(id);
+  }
+
   render() {
+    const { accessToken, display, id } = this.state;
     return (
       <Container>
         <WrapperFlex>
           <Title>playmoji</Title>
-          {!this.state.accessToken && <Login label="Sign in" />}
-          {this.state.accessToken && <Form token={this.state.accessToken} userid={this.state.id} />}
+          {!accessToken && <Login label="Sign in" />}
+          {accessToken && <Form />}
         </WrapperFlex>
-        {this.state.accessToken &&
+        {accessToken &&
         <Welcome>
-          <UserName>{this.state.display || this.state.id}</UserName>
+          <UserName>{display || id}</UserName>
           <Button onClick={this.logout.bind(this)}>Logout</Button>
           <br />
         </Welcome>
@@ -124,4 +133,4 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-export default connect(null, { setAccessToken })(withCookies(App));
+export default connect(null, { setAccessToken, setUserId })(withCookies(App));
