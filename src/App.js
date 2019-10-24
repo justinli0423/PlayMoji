@@ -31,7 +31,6 @@ class App extends Component {
       // cannot use reload here
       window.location = window.location.pathname;
       // set the accessToken to global store
-
     }
 
     accessToken = cookies.get('access_token');

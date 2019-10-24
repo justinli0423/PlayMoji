@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { FieldDynamic, Field } from './FieldInput';
@@ -19,23 +18,23 @@ class Form extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      song_list: [],
+      songList: [],
       searchString: '',
       success: false,
     };
   }
 
   removeSong(id) {
-    const songList = this.state.song_list;
+    const { songList } = this.state;
     songList.splice(id, 1);
-    this.setState({ song_list: songList });
+    this.setState({ songList });
   }
 
   formatListToString() {
     // Turns list into comma separated string
     const ret = ['', '']; // 0 - trackId, 1 - artistIds
-    const { song_list } = this.state;
-    song_list.forEach((song) => {
+    const { songList } = this.state;
+    songList.forEach((song) => {
       ret[0] += `${song.trackId},`;
       ret[1] += `${song.artistId},`;
     });
@@ -49,7 +48,7 @@ class Form extends Component {
     const {
       userId,
       accessToken,
-      emojiString
+      emojiString,
     } = this.props;
     const songInfo = this.formatListToString();
     axios.get(`${emojiapi}${emojiString}`).then((res) => {
@@ -80,7 +79,7 @@ class Form extends Component {
       ).then(() => {
         this.setState({ success: true });
         this.setState({
-          song_list: [],
+          songList: [],
         });
       }, (err) => {
         console.log('error', err);
@@ -109,9 +108,9 @@ class Form extends Component {
   }
 
   updateSong(val) {
-    const { song_list } = this.state;
-    song_list.push(val);
-    this.setState({ song_list });
+    const { songList } = this.state;
+    songList.push(val);
+    this.setState({ songList });
   }
 
   searchSong(val) {
@@ -153,7 +152,12 @@ class Form extends Component {
   }
 
   render() {
-    const { success, searchString, song_list, songs } = this.state;
+    const {
+      success,
+      searchString,
+      songList,
+      songs,
+    } = this.state;
     return (
       <Wrapper>
         <WrapperRow>
@@ -164,15 +168,15 @@ class Form extends Component {
           {
             <Songs
               searchString={searchString}
-              flag_cap={song_list.length >= 5}
+              flag_cap={songList.length >= 5}
               songsArray={songs}
               selectSong={(val) => { this.updateSong(val); }}
             />
           }
           <RemoveSongWrapper>
-            {song_list.map((song, i) => <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this, i)}>x</ButtonRemove><span>{song.name}</span></Item>)}
+            {songList.map((song, i) => <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this, i)}>x</ButtonRemove><span>{song.name}</span></Item>)}
           </RemoveSongWrapper>
-          <Emoji/>
+          <Emoji />
           <ButtonCreate onClick={this.createPlaylist.bind(this)}>Create Playlist</ButtonCreate>
         </WrapperRow>
       </Wrapper>
@@ -180,12 +184,12 @@ class Form extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const accessToken = getAccessToken(state);
   const userId = getUserId(state);
   const emojiString = getEmojis(state);
   return { accessToken, userId, emojiString };
-}
+};
 
 const WrapperRow = styled.div`
   display: flex;
