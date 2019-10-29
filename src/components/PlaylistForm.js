@@ -10,6 +10,7 @@ import Songs from './Songs';
 import Emoji from './emoji';
 import Success from './Success';
 import { getAccessToken, getUserId, getEmojis } from '../redux/selectors';
+import colors from './data/Colors';
 
 const server = 'https://spotify-playlist-generator-api.herokuapp.com';
 const emojiapi = 'https://emojistoemotions.herokuapp.com/emojicollection/';
@@ -163,22 +164,33 @@ class Form extends Component {
         <WrapperRow>
           {success && <Success />}
           <Field id="playlist" required placeholder="Playlist Name" />
+          <WhiteSpace>&nbsp;</WhiteSpace>
           <Field id="desc" required placeholder="Description" />
+          <WhiteSpace>&nbsp;</WhiteSpace>
           <FieldDynamic id="song-search" required placeholder="Search a song!" searchSong={(val) => { this.searchSong(val); }} />
-          {
+          <WhiteSpace>&nbsp;</WhiteSpace>
+        </WrapperRow>
+        <SelectableContainer>
+          <SelectableSections>
+            {/* For search results */}
             <Songs
               searchString={searchString}
               flag_cap={songList.length >= 5}
               songsArray={songs}
               selectSong={(val) => { this.updateSong(val); }}
             />
-          }
-          <RemoveSongWrapper>
+          </SelectableSections>
+          <SelectableSections>
+            {/* For the spotify request results */}
+            <RemoveSongWrapper>
             {songList.map((song, i) => <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this, i)}>x</ButtonRemove><span>{song.name}</span></Item>)}
-          </RemoveSongWrapper>
+            </RemoveSongWrapper>
+          </SelectableSections>
+        </SelectableContainer>
+        <WrapperColumn>
           <Emoji />
           <ButtonCreate onClick={this.createPlaylist.bind(this)}>Create Playlist</ButtonCreate>
-        </WrapperRow>
+        </WrapperColumn>
       </Wrapper>
     );
   }
@@ -193,14 +205,38 @@ const mapStateToProps = (state) => {
 
 const WrapperRow = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
+  margin-top: 5em;
+`;
+
+const WrapperColumn = WrapperRow.extend`
+  flex-direction: column;
+  margin: 0;
+`;
+
+const SelectableContainer = WrapperRow.extend`
+  margin: 3em 5em;
+  height: calc(1.5rem * 27.7);
+`;
+
+const SelectableSections = styled.div`
+  margin: 3em;
+  width: 60em;
+  height: calc(1.5rem * 27.7);
+  border: 3px solid ${colors.grey};
+  /* overflow: hidden; */
+  border-radius: 5px;
 `;
 
 const Wrapper = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
+`;
+
+const WhiteSpace = styled.span`
+  width: 2em;
 `;
 
 const RemoveSongWrapper = Wrapper.extend`

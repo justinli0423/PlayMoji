@@ -25,7 +25,7 @@ Field.propTypes = {
 
 const Input = styled.input`
   font-size: 2em;
-  margin: .5em auto;
+  margin: 10px 3px;
   color: ${Colors.black};
   background-color: ${Colors.white};
   transition: all .5s;

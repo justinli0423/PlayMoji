@@ -26,43 +26,32 @@ class Songs extends Component {
     return (
       !this.props.flag_cap &&
       <Wrapper searchString={this.props.searchString}>
-        {/* first half of list */}
-        <ListTop>{songs.length !== 0 && songs.slice(0, songs.length / 2).map((song, i) =>
+        <SongContent>{songs.length !== 0 && songs.map((song, i) =>
           (
             <Container>
               <Button onClick={this.register.bind(this, song)} src={song.imageUrl} />
-              <Content id={i}>{song.name.length > 10 ? `${song.name.substring(0, 10)}...` : song.name}</Content>
+              <Content id={i}>{song.name.length > 40 ? `${song.name.substring(0, 40)}...` : song.name}</Content>
             </Container>
           ))}
-        </ListTop>
-        <List>
-          {/* 2nd half of list */}
-          {songs.slice(songs.length / 2, songs.length).map((song, i) =>
-            (
-              <Container>
-                <Button onClick={this.register.bind(this, song, i)} src={song.imageUrl} />
-                <Content id={i}>{song.name.length > 10 ? `${song.name.substring(0, 10)}...` : song.name}</Content>
-              </Container>
-            ))}
-        </List>
+        </SongContent>
       </Wrapper>
     );
   }
 }
 
 const Wrapper = styled.div`
-  display: ${props => (props.searchString.length < 1 ? 'none' : 'default')};
+  display: ${props => (props.searchString.length < 1 ? 'none' : 'relative')};
 `;
 
 const List = styled.div`
-  margin-top: 5em;
   display: flex;
   justify-content: space-evenly;
+  flex-direction: column;
   flex-shrink: 1;
 `;
 
-const ListTop = List.extend`
-  margin-top: 2em;
+const SongContent = List.extend`
+  // flex-direction: row;
 `;
 
 const Content = styled.div`
@@ -73,21 +62,31 @@ const Content = styled.div`
 `;
 
 const Container = styled.div`
-  padding: .5em;
+  /* TODO: FIX HOVER EFFECT BORDERS */
+  width: 100%;
+  height: 1.5rem;
   transition: all .3s;
-  margin-right: 2rem;
-  box-shadow: 2px 2px 5px ${Colors.grey};
+  display: flex;
+  flex-direction: row;
+  padding: 15px 0;
+  margin-top: -2px;
+  border-top: 2px solid ${Colors.grey};
+  border-bottom: 2px solid ${Colors.grey};
   &:hover {
-    transform: scale(1.2);
-    box-shadow: 7px 7px 5px ${Colors.grey};
+    border-top: 2px solid ${Colors.darkGrey};
+    border-bottom: 2px solid ${Colors.darkGrey};
+    z-index: 100;
+  }
+  &:not(:first-child) {
+    border-radius: 0;
   }
 `;
 
 const Button = styled.img`
-  width: 10em;
+  width: 25px;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 5px;
+  border-radius: 5px;
 `;
 
 export default Songs;

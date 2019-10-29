@@ -95,19 +95,27 @@ class App extends Component {
 const Title = styled.h1`
   text-align: center;
   font-size: 5em;
+  /* position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%); */
 `;
 
 const UserName = styled.h1`
   text-align: center;
   font-size: 2em;
-  margin-top: 20pt;
+  margin-top: 20px;
 `;
 
 const WrapperFlex = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  position: relative;
+  /* justify-content: space-evenly; */
+  position: fixed;
+  margin-top: 1em;
+  left: 50%;
+  top : 0;
+  transform: translateX(-50%);
   flex-shrink: 1;
   margin: 0;
   padding: 0;
