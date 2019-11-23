@@ -6,11 +6,13 @@ import { connect } from 'react-redux';
 
 import { FieldDynamic, Field } from './FieldInput';
 import { Button } from './Button';
-import Songs from './Songs';
 import Emoji from './emoji';
 import Success from './Success';
-import { getAccessToken, getUserId, getEmojis } from '../redux/selectors';
-import colors from './data/Colors';
+import { getAccessToken, getUserId, getEmojis, getSongList, getNumEventsTriggered } from '../redux/selectors';
+import { updateSongList } from '../redux/actions';
+import Colors from './data/Colors';
+
+import Songs, { Container as SongsContainer, SongContent, Button as RemoveButton, Content as RemoveSongContent, SelectLabel as DeleteLabel } from './Songs';
 
 const server = 'https://spotify-playlist-generator-api.herokuapp.com';
 const emojiapi = 'https://emojistoemotions.herokuapp.com/emojicollection/';
@@ -19,22 +21,21 @@ class Form extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      songList: [],
       searchString: '',
       success: false,
     };
   }
 
   removeSong(id) {
-    const { songList } = this.state;
+    const { songList } = this.props;
     songList.splice(id, 1);
-    this.setState({ songList });
+    this.props.updateSongList(songList);
   }
 
   formatListToString() {
     // Turns list into comma separated string
     const ret = ['', '']; // 0 - trackId, 1 - artistIds
-    const { songList } = this.state;
+    const { songList } = this.props;
     songList.forEach((song) => {
       ret[0] += `${song.trackId},`;
       ret[1] += `${song.artistId},`;
@@ -108,12 +109,6 @@ class Form extends Component {
     });
   }
 
-  updateSong(val) {
-    const { songList } = this.state;
-    songList.push(val);
-    this.setState({ songList });
-  }
-
   searchSong(val) {
     if (val) {
       this.setState({
@@ -156,9 +151,9 @@ class Form extends Component {
     const {
       success,
       searchString,
-      songList,
       songs,
     } = this.state;
+    const { songList } = this.props;
     return (
       <Wrapper>
         <WrapperRow>
@@ -169,6 +164,7 @@ class Form extends Component {
           <WhiteSpace>&nbsp;</WhiteSpace>
           <FieldDynamic id="song-search" required placeholder="Search a song!" searchSong={(val) => { this.searchSong(val); }} />
           <WhiteSpace>&nbsp;</WhiteSpace>
+          <ButtonCreate onClick={this.createPlaylist.bind(this)}>Create Playlist</ButtonCreate>
         </WrapperRow>
         <SelectableContainer>
           <SelectableSections>
@@ -176,20 +172,27 @@ class Form extends Component {
             <Songs
               searchString={searchString}
               flag_cap={songList.length >= 5}
-              songsArray={songs}
-              selectSong={(val) => { this.updateSong(val); }}
+              searchResults={songs}
             />
           </SelectableSections>
           <SelectableSections>
             {/* For the spotify request results */}
-            <RemoveSongWrapper>
-            {songList.map((song, i) => <Item><ButtonRemove id={i} onClick={this.removeSong.bind(this, i)}>x</ButtonRemove><span>{song.name}</span></Item>)}
-            </RemoveSongWrapper>
+            <SongContent>
+              {songList.map((song, i) => (
+                <SelectedSongsContainer onClick={this.removeSong.bind(this, song)}>
+                  <RemoveButton src={song.imageUrl} />
+                  <RemoveSongContent id={i}>
+                    {song.name.length > 40 ? `${song.name.substring(0, 40)}...` : song.name}
+                  </RemoveSongContent>
+                  <DeleteLabel>&times;</DeleteLabel>
+                </SelectedSongsContainer>
+              ))
+              }
+            </SongContent>
           </SelectableSections>
         </SelectableContainer>
         <WrapperColumn>
           <Emoji />
-          <ButtonCreate onClick={this.createPlaylist.bind(this)}>Create Playlist</ButtonCreate>
         </WrapperColumn>
       </Wrapper>
     );
@@ -200,14 +203,18 @@ const mapStateToProps = (state) => {
   const accessToken = getAccessToken(state);
   const userId = getUserId(state);
   const emojiString = getEmojis(state);
-  return { accessToken, userId, emojiString };
+  const songList = getSongList(state);
+  const numEventsTriggered = getNumEventsTriggered(state);
+  return {
+    accessToken, userId, emojiString, songList, numEventsTriggered,
+  };
 };
 
 const WrapperRow = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: 5em;
+  margin-top: .5em;
 `;
 
 const WrapperColumn = WrapperRow.extend`
@@ -216,16 +223,27 @@ const WrapperColumn = WrapperRow.extend`
 `;
 
 const SelectableContainer = WrapperRow.extend`
-  margin: 3em 5em;
+  margin: 0 3em 5em;
   height: calc(1.5rem * 27.7);
+`;
+
+const SelectedSongsContainer = SongsContainer.extend`
+  &:hover {
+    border-top: 2px solid ${Colors.red};
+    border-bottom: 2px solid ${Colors.red};
+    z-index: 100;
+  }
+  &:hover ${DeleteLabel} {
+    opacity: 1;
+    color: ${Colors.red};
+  }
 `;
 
 const SelectableSections = styled.div`
   margin: 3em;
   width: 60em;
   height: calc(1.5rem * 27.7);
-  border: 3px solid ${colors.grey};
-  /* overflow: hidden; */
+  border: 3px solid ${Colors.grey};
   border-radius: 5px;
 `;
 
@@ -239,24 +257,8 @@ const WhiteSpace = styled.span`
   width: 2em;
 `;
 
-const RemoveSongWrapper = Wrapper.extend`
-  margin-top: 2em;
-`;
-
-const Item = styled.span`
-  margin: .5em auto;
-  padding-left: 3em;
-`;
-
 const ButtonCreate = Button.extend`
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: 10px 3px;
 `;
 
-const ButtonRemove = Button.extend`
-  padding: 0 .2em;
-  display: inline;
-  margin: .5em;
-`;
-
-export default connect(mapStateToProps)(Form);
+export default connect(mapStateToProps, { updateSongList })(Form);

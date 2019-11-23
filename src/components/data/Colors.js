@@ -6,7 +6,8 @@ const colors = {
   spaceBlue: '#1B2735',
   spaceBlack: '#090A0F',
   grey: '#C0C0C0',
-  darkGrehy: '#A9A9A9'
+  darkGrehy: '#A9A9A9',
+  red: '#FF0000'
 };
 
 export default colors;

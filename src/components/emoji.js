@@ -78,8 +78,8 @@ class Emoji extends Component {
     const emojis = this.state.emojiList;
     const { emojiSelect } = this.state;
     // create 2 lists to display
-    const emojisListOne = emojis.slice(0, emojis.length / 2);
-    const emojisListTwo = emojis.slice(emojis.length / 2, emojis.length);
+    const emojisListOne = emojis.slice(0, emojis.length);
+    // const emojisListTwo = emojis.slice(emojis.length / 2, emojis.length);
 
     return (
       <Template>
@@ -89,12 +89,12 @@ class Emoji extends Component {
             <Emojibtn id={`emoji__${i}`} onClick={this.addEmoji.bind(this, emoji, i)}>{emoji.emoji}</Emojibtn>
           ))}
         </Wrapper>
-        <Wrapper>
+        {/* <Wrapper>
           {emojisListTwo.map((emoji, i) => (emojiSelect[i + emojis.length / 2] ?
             <EmojibtnSelect id={`emoji__${i + emojis.length / 2}`} onClick={this.addEmoji.bind(this, emoji, i + emojis.length / 2)}>{emoji.emoji}</EmojibtnSelect> :
             <Emojibtn id={`emoji__${i + emojis.length / 2}`} onClick={this.addEmoji.bind(this, emoji, i + emojis.length / 2)}>{emoji.emoji}</Emojibtn>
             ))}
-        </Wrapper>
+        </Wrapper> */}
       </Template>
     );
   }
