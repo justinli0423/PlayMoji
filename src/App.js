@@ -5,9 +5,10 @@ import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { connect } from 'react-redux';
 
-import Form from './components/PlaylistForm';
-import { Login, Button } from './components/Button';
+import PlaylistForm from './components/PlaylistForm';
+import LoginPage from './components/Login';
 import { setAccessToken, setUserId } from './redux/actions';
+import NavBar from './components/NavBar';
 
 class App extends Component {
   static propTypes = {
@@ -37,12 +38,12 @@ class App extends Component {
     this.setState({ accessToken });
     this.handleAccessToken();
 
+    // set handles
     axios.get('https://api.spotify.com/v1/me', { headers: { Authorization: `Bearer ${accessToken}` } })
       .then((data) => {
         this.setState({ id: data.data.id, display: data.data.display_name });
         this.handleUserId();
       }, (e) => {
-      // console.log(e);
         if (e.response.status === 401 && accessToken != null) {
           console.log('Token has expired, logging out');
           cookies.remove('access_token');
@@ -55,7 +56,7 @@ class App extends Component {
     const { cookies } = this.props;
     console.log('Logging out');
     cookies.remove('access_token');
-    this.setState({ id: undefined, display: undefined, accessToken: '' });
+    this.setState({ accessToken: '' });
     this.handleAccessToken();
     this.handleUserId();
     window.location.reload();
@@ -71,73 +72,45 @@ class App extends Component {
     this.props.setUserId(id);
   }
 
+  renderLogin() {
+    return (
+      <LoginPage />
+    );
+  }
+
+  renderMain(name) {
+    return (
+      <MainContainer>
+        <NavBar
+          name={name}
+          logout={this.logout.bind(this)}
+        />
+        <PlaylistForm />
+      </MainContainer>
+    );
+  }
+
   render() {
-    const { accessToken, display, id } = this.state;
+    const { accessToken } = this.state;
     return (
       <Container>
-        <WrapperFlex>
-          <Title>playmoji</Title>
-          {!accessToken && <Login label="Sign in" />}
-          {accessToken && <Form />}
-        </WrapperFlex>
-        {accessToken &&
-        <Welcome>
-          <UserName>{display || id}</UserName>
-          <Button onClick={this.logout.bind(this)}>Logout</Button>
-          <br />
-        </Welcome>
-        }
+        {!accessToken && this.renderLogin()}
+        {accessToken && this.renderMain()}
       </Container>
     );
   }
 }
 
-const Title = styled.h1`
-  text-align: center;
-  font-size: 5em;
-  /* position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%); */
-`;
-
-const UserName = styled.h1`
-  text-align: center;
-  font-size: 2em;
-  margin-top: 20px;
-`;
-
-const WrapperFlex = styled.div`
-  display: flex;
-  flex-direction: column;
-  /* justify-content: space-evenly; */
-  position: fixed;
-  margin-top: 1em;
-  left: 50%;
-  top : 0;
-  transform: translateX(-50%);
-  flex-shrink: 1;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-`;
-
-const Welcome = styled.div`
-  display: block;
-  position: absolute;
-  cursor: default;
-  padding: 0 2em;
-  top: 0;
-  right: 0;
-  margin: 0;
-  font-size: 1em;
-`;
-
 const Container = styled.div`
   display: block;
   width: 100vw;
   height: 100vh;
+`;
+
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 export default connect(null, { setAccessToken, setUserId })(withCookies(App));

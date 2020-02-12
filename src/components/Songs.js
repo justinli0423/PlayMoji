@@ -101,7 +101,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: row;
   padding: 15px 0;
-  margin-top: -2px;
+  margin-top: 2.5px;
   border-top: 2px solid ${Colors.grey};
   border-bottom: 2px solid ${Colors.grey};
   &:hover {
@@ -115,6 +115,7 @@ export const Container = styled.div`
   }
   &:not(:first-child) {
     border-radius: 0;
+    margin-top: -2px;
   }
 `;
 

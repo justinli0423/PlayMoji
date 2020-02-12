@@ -17,13 +17,42 @@ import Songs, { Container as SongsContainer, SongContent, Button as RemoveButton
 const server = 'https://spotify-playlist-generator-api.herokuapp.com';
 const emojiapi = 'https://emojistoemotions.herokuapp.com/emojicollection/';
 
-class Form extends Component {
+class PlaylistForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       searchString: '',
       success: false,
     };
+  }
+
+  async getSongs() {
+    try {
+      const res = await this.getEmojiString();
+      await this.createPlaylist(res);
+    } catch {
+      try {
+        await this.createPlaylistBackup();
+      } catch (err) {
+        console.log(`Cannot create playlist: ${err}`); // replace with component
+        window.location.reload();
+      }
+    } finally {
+      this.setState({ success: true });
+      setTimeout(() => { // turn off success after 3s
+        this.setState({ success: false });
+      }, 3000);
+      this.props.updateSongList([]);
+    }
+  }
+
+  getEmojiString() {
+    const { emojiString } = this.props;
+    return axios.get(`${emojiapi}${emojiString}`)
+      .then(res => res)
+      .catch((error) => {
+        return error;
+      });
   }
 
   removeSong(id) {
@@ -46,66 +75,65 @@ class Form extends Component {
     return ret;
   }
 
-  createPlaylist() {
+  createPlaylistBackup() {
     const {
       userId,
       accessToken,
-      emojiString,
     } = this.props;
     const songInfo = this.formatListToString();
-    axios.get(`${emojiapi}${emojiString}`).then((res) => {
-      // returns formatted object for spotify api
-      // TO FIX ON API SIDE: EMOJIS ARE NOT PARSED CORRECTLY - SPOTIFY REJECTS BELOW SOMETIMES
-      const { data } = res;
-      axios.post(
-        `${server}/playlists`, {
-          user: userId,
-          name: document.getElementById('playlist').value,
-          description: document.getElementById('desc').value,
-          tracks: songInfo[0],
-          artists: songInfo[1],
-          limit: 50,
-          danceability: data.danceability,
-          energy: data.energy,
-          liveness: data.liveness,
-          loudness: data.loudness,
-          mode: data.mode,
-          popularity: data.popularity,
-          valence: data.valence,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      ).then(() => {
-        this.setState({ success: true });
-        this.setState({
-          songList: [],
-        });
-      }, (err) => {
-        console.log('error', err);
-      });
-    }, () => {
-      // seperate API call if emojis were not picked - in error callback
-      axios.post(`${server}/playlists`, {
+    return axios.post(`${server}/playlists`, {
+      user: userId,
+      name: document.getElementById('playlist').value,
+      description: document.getElementById('desc').value,
+      tracks: songInfo[0],
+      artists: songInfo[1],
+      limit: 50,
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }).then(() => {
+      Promise.resolve(true);
+    }).catch((err) => {
+      return err;
+    });
+  }
+
+
+  createPlaylist(res) {
+    const {
+      userId,
+      accessToken,
+    } = this.props;
+    const songInfo = this.formatListToString();
+    // returns formatted object for spotify api
+    // TO FIX ON API SIDE: EMOJIS ARE NOT PARSED CORRECTLY - SPOTIFY REJECTS BELOW SOMETIMES
+    const { data } = res;
+    axios.post(
+      `${server}/playlists`, {
         user: userId,
         name: document.getElementById('playlist').value,
         description: document.getElementById('desc').value,
         tracks: songInfo[0],
         artists: songInfo[1],
         limit: 50,
-      }, {
+        danceability: data.danceability,
+        energy: data.energy,
+        liveness: data.liveness,
+        loudness: data.loudness,
+        mode: data.mode,
+        popularity: data.popularity,
+        valence: data.valence,
+      },
+      {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }).then(() => {
-        this.setState({ success: true });
-      }, (err) => {
-        if (err.response.status === 401) {
-          window.location.reload();
-        }
-      });
+      },
+    ).then(() => {
+      Promise.resolve(true);
+    }).catch((error) => {
+      return error;
     });
   }
 
@@ -149,9 +177,9 @@ class Form extends Component {
 
   render() {
     const {
-      success,
       searchString,
       songs,
+      success,
     } = this.state;
     const { songList } = this.props;
     return (
@@ -164,10 +192,13 @@ class Form extends Component {
           <WhiteSpace>&nbsp;</WhiteSpace>
           <FieldDynamic id="song-search" required placeholder="Search a song!" searchSong={(val) => { this.searchSong(val); }} />
           <WhiteSpace>&nbsp;</WhiteSpace>
-          <ButtonCreate onClick={this.createPlaylist.bind(this)}>Create Playlist</ButtonCreate>
+          <ButtonCreate onClick={this.getSongs.bind(this)}>Create Playlist</ButtonCreate>
         </WrapperRow>
         <SelectableContainer>
           <SelectableSections>
+            <SectionLabel>
+              Select Up To Five Songs
+            </SectionLabel>
             {/* For search results */}
             <Songs
               searchString={searchString}
@@ -176,16 +207,23 @@ class Form extends Component {
             />
           </SelectableSections>
           <SelectableSections>
+            <SectionLabel>
+              Selected Songs
+            </SectionLabel>
             {/* For the spotify request results */}
             <SongContent>
               {songList.map((song, i) => (
-                <SelectedSongsContainer onClick={this.removeSong.bind(this, song)}>
-                  <RemoveButton src={song.imageUrl} />
-                  <RemoveSongContent id={i}>
-                    {song.name.length > 40 ? `${song.name.substring(0, 40)}...` : song.name}
-                  </RemoveSongContent>
-                  <DeleteLabel>&times;</DeleteLabel>
-                </SelectedSongsContainer>
+                <SelectableContainer draggable>
+                  <SelectedSongsContainer
+                    onClick={this.removeSong.bind(this, song)}
+                  >
+                    <RemoveButton src={song.imageUrl} />
+                    <RemoveSongContent id={i}>
+                      {song.name.length > 40 ? `${song.name.substring(0, 40)}...` : song.name}
+                    </RemoveSongContent>
+                    <DeleteLabel>&times;</DeleteLabel>
+                  </SelectedSongsContainer>
+                </SelectableContainer>
               ))
               }
             </SongContent>
@@ -239,6 +277,12 @@ const SelectedSongsContainer = SongsContainer.extend`
   }
 `;
 
+const SectionLabel = styled.div`
+  font-size: 2em;
+  opacity: .7;
+  margin-top: -1.5em;
+`;
+
 const SelectableSections = styled.div`
   margin: 3em;
   width: 60em;
@@ -261,4 +305,4 @@ const ButtonCreate = Button.extend`
   margin: 10px 3px;
 `;
 
-export default connect(mapStateToProps, { updateSongList })(Form);
+export default connect(mapStateToProps, { updateSongList })(PlaylistForm);
