@@ -4,15 +4,15 @@ import PropTypes from 'prop-types';
 
 import Colors from './data/Colors';
 
-const FieldDynamic = ({ id, placeholder, searchSong }) => (
-  <Input id={id} placeholder={placeholder} type="text" onChange={() => searchSong(document.getElementById(id).value)} />
+const SongSearch = ({ id, placeholder, searchSong }) => (
+  <SearchInput id={id} placeholder={placeholder} type="text" autoComplete="off" onChange={() => searchSong(document.querySelector(`#${id}`).value)} />
 );
 
 const Field = ({ id, placeholder }) => (
-  <Input id={id} placeholder={placeholder} />
+  <Input id={id} placeholder={placeholder} autoComplete="off" />
 );
 
-FieldDynamic.propTypes = {
+SongSearch.propTypes = {
   id: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
   searchSong: PropTypes.func.isRequired,
@@ -24,20 +24,35 @@ Field.propTypes = {
 };
 
 const Input = styled.input`
-  font-size: 2em;
   margin: 10px 3px;
-  color: ${Colors.black};
-  background-color: ${Colors.white};
-  transition: all .5s;
-  padding: 0.5em;
+  padding: 0.6em;
   border: none;
-  border-bottom: 2px solid ${Colors.grey};
-  transition: all .3s;
+  border-radius: 500px;
+  color: ${Colors.black};
+  font-size: 2em;
+  background-color: ${Colors.white};
+  transition: .5s all;
 
-  &:focus {
+  &:focus,
+  &:hover,
+  &:active {
     outline: none;
-    border-bottom: 2px solid ${Colors.black};
   }
 `;
 
-export { FieldDynamic, Field };
+const SearchInput = styled.input`
+  margin: 10px 5px;
+  padding: 0.6em;
+  border: none;
+  border-radius: 500px;
+  transition: .5s all;
+
+  &:focus,
+  &:hover,
+  &:active {
+    outline: none;
+    transform: scale(1.2);
+  }
+`;
+
+export { SongSearch, Field };

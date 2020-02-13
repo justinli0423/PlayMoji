@@ -20,7 +20,7 @@ const Button = styled.a`
     margin: 0 auto;
     margin-top: 2em;
     text-align: center;
-    color: ${Colors.black};
+    color: ${Colors.white};
     border-radius: 5px;
     transition: all .5s;
     text-decoration: none;

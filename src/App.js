@@ -7,8 +7,10 @@ import { connect } from 'react-redux';
 
 import PlaylistForm from './components/PlaylistForm';
 import LoginPage from './components/Login';
-import { setAccessToken, setUserId } from './redux/actions';
+import { setAccessToken, setUserId, updateSongList } from './redux/actions';
 import NavBar from './components/NavBar';
+import SideBar from './components/SideBar';
+import Colors from './components/data/Colors';
 
 class App extends Component {
   static propTypes = {
@@ -39,18 +41,46 @@ class App extends Component {
     this.handleAccessToken();
 
     // set handles
-    axios.get('https://api.spotify.com/v1/me', { headers: { Authorization: `Bearer ${accessToken}` } })
-      .then((data) => {
-        this.setState({ id: data.data.id, display: data.data.display_name });
-        this.handleUserId();
-      }, (e) => {
-        if (e.response.status === 401 && accessToken != null) {
-          console.log('Token has expired, logging out');
-          cookies.remove('access_token');
-          window.location.reload();
-        }
-      });
+    axios.get('https://api.spotify.com/v1/me', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }).then((res) => {
+      const { data } = res;
+      this.setState({ id: data.id });
+      this.handleUserId();
+      this.getNewReleases(accessToken); // maybe switch to async/await
+    }).catch((e) => {
+      if (e.response.status === 401 && accessToken != null) {
+        console.log('Token has expired, logging out');
+        cookies.remove('access_token');
+        window.location.reload();
+      }
+    });
   }
+
+  getNewReleases(accessToken) {
+    axios.get('https://api.spotify.com/v1/playlists/37i9dQZF1DWXT8uSSn6PRy', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }).then((res) => {
+      this.handleUpdateSongs(this.filterPlaylist(res.data.tracks.items));
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  filterPlaylist(playlist) {
+    return playlist.map(trackObj => ({
+      name: trackObj.track.name,
+      trackId: trackObj.track.id,
+      artistId: trackObj.track.artists[0].id,
+      imageUrl: trackObj.track.album.images[0].url,
+      selected: false,
+    }));
+  }
+
 
   logout() {
     const { cookies } = this.props;
@@ -72,6 +102,10 @@ class App extends Component {
     this.props.setUserId(id);
   }
 
+  handleUpdateSongs = (songs) => {
+    this.props.updateSongList(songs);
+  }
+
   renderLogin() {
     return (
       <LoginPage />
@@ -85,7 +119,10 @@ class App extends Component {
           name={name}
           logout={this.logout.bind(this)}
         />
-        <PlaylistForm />
+        <ContentContainer>
+          <SideBar />
+          <PlaylistForm />
+        </ContentContainer>
       </MainContainer>
     );
   }
@@ -110,7 +147,15 @@ const Container = styled.div`
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  height: 100%;
+  background-color: ${Colors.spotifyGrey};
 `;
 
-export default connect(null, { setAccessToken, setUserId })(withCookies(App));
+const ContentContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: 100%;
+`;
+
+export default connect(null, { setAccessToken, setUserId, updateSongList })(withCookies(App));

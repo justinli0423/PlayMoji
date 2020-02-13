@@ -1,12 +1,20 @@
 // GLOBAL STORE
 import { createStore } from 'redux';
 
-
 const initialStates = {
   accessToken: '',
   userId: '',
   songs: [],
   emojis: '',
+  additionaProperties: {
+    danceability: 0,
+    energy: 0,
+    liveness: 0,
+    loudness: 0,
+    mode: 0,
+    popularity: 0,
+    valence: 0,
+  },
   eventsTriggered: 0,
 };
 
@@ -20,7 +28,6 @@ const reducers = (state = initialStates, action) => {
       };
     }
     case 'LOGIN_TOKEN': {
-      console.log(`Setting AccessToken: ${action.payload.accessToken}`);
       const { accessToken } = action.payload;
       return {
         ...state,
@@ -32,7 +39,7 @@ const reducers = (state = initialStates, action) => {
       return {
         ...state,
         songs,
-        eventsTriggered: ++state.eventsTriggered,
+        eventsTriggered: state.eventsTriggered + 1,
       };
     }
     case 'UPDATE_EMOJIS': {
@@ -40,7 +47,15 @@ const reducers = (state = initialStates, action) => {
       return {
         ...state,
         emojis,
-        eventsTriggered: ++state.eventsTriggered,
+        eventsTriggered: state.eventsTriggered + 1,
+      };
+    }
+    case 'UPDATE_ADDITIONAL_PROPS': {
+      const { additionaProperties } = action.payload;
+      return {
+        ...state,
+        additionaProperties,
+        eventsTriggered: state.eventsTriggered + 1,
       };
     }
     default:

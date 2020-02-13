@@ -4,9 +4,10 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-import { updateEmojiList } from '../redux/actions';
+import { updateEmojiList, updateAdditionalProps } from '../redux/actions';
 
 const server = 'https://emojistoemotions.herokuapp.com/emojicollection';
+const emojiapi = 'https://emojistoemotions.herokuapp.com/emojicollection/';
 
 class Emoji extends Component {
   constructor(props) {
@@ -19,9 +20,22 @@ class Emoji extends Component {
     this.emojiGet();
   }
 
-  handleEmojiList = () => {
+  getAdditionalProps() {
+    const { emojiString } = this.state;
+    return axios.get(`${emojiapi}${this.formatEmojiString(emojiString)}`)
+      .then(res => res)
+      .catch(error => error);
+  }
+
+  async handleEmojiList() {
     const { emojiString } = this.state;
     this.props.updateEmojiList(this.formatEmojiString(emojiString));
+    try {
+      const props = await this.getAdditionalProps();
+      this.props.updateAdditionalProps(props.data);
+    } catch (e) {
+      console.log(`error: ${e}`);
+    }
   }
 
   emojiGet() {
@@ -45,6 +59,7 @@ class Emoji extends Component {
       emojiSelect,
       emojiString,
     } = this.state;
+    // CONVERT TO OBJECT WITH PROPERTY .SELECTED
     // emojiString: list of emojis
     // emojiSelect: selected Emojis - set that index to true
     emojiSelect[id] = !emojiSelect[id];
@@ -77,9 +92,7 @@ class Emoji extends Component {
   render() {
     const emojis = this.state.emojiList;
     const { emojiSelect } = this.state;
-    // create 2 lists to display
     const emojisListOne = emojis.slice(0, emojis.length);
-    // const emojisListTwo = emojis.slice(emojis.length / 2, emojis.length);
 
     return (
       <Template>
@@ -89,12 +102,6 @@ class Emoji extends Component {
             <Emojibtn id={`emoji__${i}`} onClick={this.addEmoji.bind(this, emoji, i)}>{emoji.emoji}</Emojibtn>
           ))}
         </Wrapper>
-        {/* <Wrapper>
-          {emojisListTwo.map((emoji, i) => (emojiSelect[i + emojis.length / 2] ?
-            <EmojibtnSelect id={`emoji__${i + emojis.length / 2}`} onClick={this.addEmoji.bind(this, emoji, i + emojis.length / 2)}>{emoji.emoji}</EmojibtnSelect> :
-            <Emojibtn id={`emoji__${i + emojis.length / 2}`} onClick={this.addEmoji.bind(this, emoji, i + emojis.length / 2)}>{emoji.emoji}</Emojibtn>
-            ))}
-        </Wrapper> */}
       </Template>
     );
   }
@@ -131,4 +138,4 @@ const Template = styled.div`
   margin-top: 1em;
 `;
 
-export default connect(null, { updateEmojiList })(Emoji);
+export default connect(null, { updateEmojiList, updateAdditionalProps })(Emoji);
