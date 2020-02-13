@@ -5,7 +5,7 @@ const initialStates = {
   accessToken: '',
   userId: '',
   songs: [],
-  emojis: '',
+  emojis: '', // to remove
   additionaProperties: {
     danceability: 0,
     energy: 0,
@@ -20,14 +20,14 @@ const initialStates = {
 
 const reducers = (state = initialStates, action) => {
   switch (action.type) {
-    case 'USER_ID': {
+    case 'USER_ID': { // change to update_user_id
       const { userId } = action.payload;
       return {
         ...state,
         userId,
       };
     }
-    case 'LOGIN_TOKEN': {
+    case 'LOGIN_TOKEN': { // change to update_login_token
       const { accessToken } = action.payload;
       return {
         ...state,

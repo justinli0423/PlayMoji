@@ -3,11 +3,6 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { connect } from 'react-redux';
-
-import { Field } from './FieldInput';
-import { Button } from './Button';
-import Emoji from './emoji';
-import Success from './Success';
 import { updateSongList, updateEmojiList } from '../redux/actions';
 import { getAccessToken,
   getUserId,
@@ -16,6 +11,10 @@ import { getAccessToken,
   getAdditionalProps,
   getNumEventsTriggered } from '../redux/selectors';
 
+import { Field } from './FieldInput';
+import { Button } from './Button';
+import Emoji from './emoji';
+import Success from './Success';
 import Songs from './Songs';
 
 const server = 'https://spotify-playlist-generator-api.herokuapp.com';
@@ -43,12 +42,6 @@ class PlaylistForm extends Component {
         window.location.reload();
       }
     }
-  }
-
-  removeSong(id) {
-    const { songList } = this.props;
-    songList.splice(id, 1);
-    this.props.updateSongList(songList);
   }
 
   formatListToString() {
@@ -87,7 +80,7 @@ class PlaylistForm extends Component {
       },
     }).then(() => {
       Promise.resolve(true);
-    }).catch(err => err);
+    }).catch(err => err); // should be throwing error
   }
 
   createPlaylist(additionalProps) {
@@ -112,7 +105,7 @@ class PlaylistForm extends Component {
       },
     }).then(() => {
       Promise.resolve(true);
-    }).catch(error => error);
+    }).catch(error => error); // fix the error handling
   }
 
   playlistCreationCB() {
@@ -125,6 +118,7 @@ class PlaylistForm extends Component {
       ...song,
       selected: false,
     })));
+    // clear emoji (inputs in future)
   }
 
   renderPlaylistInputs() {

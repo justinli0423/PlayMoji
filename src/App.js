@@ -4,12 +4,13 @@ import axios from 'axios';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { connect } from 'react-redux';
+import { setAccessToken, setUserId, updateSongList } from './redux/actions';
 
 import PlaylistForm from './components/PlaylistForm';
 import LoginPage from './components/Login';
-import { setAccessToken, setUserId, updateSongList } from './redux/actions';
 import NavBar from './components/NavBar';
 import SideBar from './components/SideBar';
+
 import Colors from './components/data/Colors';
 
 class App extends Component {

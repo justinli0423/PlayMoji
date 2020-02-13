@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { connect } from 'react-redux';
-
-
-import Colors from './data/Colors';
 import { updateSongList } from '../redux/actions';
 import { getAccessToken, getNumEventsTriggered, getSongList } from '../redux/selectors';
+
 import { Button } from './Button';
 import { SongSearch } from './FieldInput';
+
+import Colors from './data/Colors';
 
 const server = 'https://spotify-playlist-generator-api.herokuapp.com';
 
@@ -58,7 +58,6 @@ class NavBar extends Component {
       });
     }
 
-
     // debouncer for optimization
     clearTimeout(searchDebounceHandle);
     this.setState({ searchDebounceHandle: setTimeout(val && getSongs.bind(this), 300) });
@@ -71,7 +70,12 @@ class NavBar extends Component {
         <ContentWrapper>
           <Title>playmoji</Title>
           <FloatRightWrapper>
-            <SongSearch id="song-search" required placeholder="Search a song!" searchSong={(val) => { this.searchSong(val); }} />
+            <SongSearch
+              id="song-search"
+              required
+              placeholder="Search a song!"
+              searchSong={(val) => { this.searchSong(val); }}
+            />
             <LogoutButton onClick={this.props.logout}>Logout</LogoutButton>
           </FloatRightWrapper>
         </ContentWrapper>

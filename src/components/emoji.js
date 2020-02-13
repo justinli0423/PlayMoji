@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { connect } from 'react-redux';
 import _ from 'lodash';
-
+import { connect } from 'react-redux';
 import { updateEmojiList, updateAdditionalProps } from '../redux/actions';
 
 const server = 'https://emojistoemotions.herokuapp.com/emojicollection';
@@ -29,10 +28,19 @@ class Emoji extends Component {
 
   async handleEmojiList() {
     const { emojiString } = this.state;
+    const defaultProps = {
+      danceability: 0,
+      energy: 0,
+      liveness: 0,
+      loudness: 0,
+      mode: 0,
+      popularity: 0,
+      valence: 0,
+    };
     this.props.updateEmojiList(this.formatEmojiString(emojiString));
     try {
       const props = await this.getAdditionalProps();
-      this.props.updateAdditionalProps(props.data);
+      this.props.updateAdditionalProps(props.data || defaultProps);
     } catch (e) {
       console.log(`error: ${e}`);
     }

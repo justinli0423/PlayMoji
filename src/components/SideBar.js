@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-
-
-import Colors from './data/Colors';
 import { updateSongList } from '../redux/actions';
 import { getAccessToken, getSongList, getNumEventsTriggered } from '../redux/selectors';
+
 import { SongIcon } from './Songs';
+
+import Colors from './data/Colors';
 
 class NavBar extends Component {
   handleUpdateSongs(songs = []) {
@@ -20,6 +20,7 @@ class NavBar extends Component {
 
   removeSelectedSong(songToDeselect) {
     const { songList } = this.props;
+    // change songList of objects in objects instead of array of objects (perf)
     const updatedList = songList.map((song) => {
       if (songToDeselect === song) {
         return {
@@ -43,7 +44,7 @@ class NavBar extends Component {
             this.filterSelectedSongs().map(song => (
               <SongWrapper onClick={() => { this.removeSelectedSong(song); }}>
                 <DeleteSongIcon src={song.imageUrl} />
-                <SongName>{song.name.length > 30 ? `${song.name.slice(0, 30)}...` : song.name}</SongName>
+                <SongName>{song.name.length > 20 ? `${song.name.slice(0, 20)}...` : song.name}</SongName>
               </SongWrapper>
             ))
           }

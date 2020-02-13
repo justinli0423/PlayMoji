@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { getSongList, getNumEventsTriggered } from './../redux/selectors';
+import { updateSongList } from './../redux/actions';
 
 import AdditionalStats from './AdditionalStats';
 
 import Colors from './data/Colors';
-import { getSongList, getNumEventsTriggered } from './../redux/selectors';
-import { updateSongList } from './../redux/actions';
 
 class Songs extends Component {
   static propTypes = {

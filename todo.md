@@ -12,7 +12,7 @@
 - proptype defaults and validators
 - convert all display units to px and media query properly (?)
 - APIs into own file (remove all constants)
-- reorganize css 
+- reorganize css (extend after assignments)
 - change css into flex[done]
 - more UI feedback on loads
   - logout message
@@ -20,12 +20,13 @@
 
 ### UI
 - fix cursor [done]
+- media queries!!
 - add fontawesome for UI enhancement
 - better visuals selection size exceeded
 - sidebar customization to fit with rest of page
 - color fixing (sidebar/topbar)
 - UI acknowledgement of max 5 songs for basis
-- fix button layout
+- fix button layout(align all in same spot)
 - pick better global font 
 - error indication of removing songs
 - create icon for user (move logout to a less accessible area)
